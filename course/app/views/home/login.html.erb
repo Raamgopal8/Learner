@@ -1,0 +1,84 @@
+<div class="login-section">
+  <div class="login-container">
+    <!-- Left Side - Branding -->
+    <div class="login-branding">
+      <div class="brand-logo">
+        <i class="fas fa-graduation-cap"></i>
+        <span>Tutorx</span>
+      </div>
+      <h2 class="brand-title">Welcome to Tutorx</h2>
+      <p class="brand-subtitle">
+        Your gateway to endless learning opportunities. Continue your educational journey with us.
+      </p>
+      <div class="brand-features">
+        <div class="brand-feature">
+          <i class="fas fa-book-open"></i>
+          <span>Access thousands of courses</span>
+        </div>
+        <div class="brand-feature">
+          <i class="fas fa-clipboard-check"></i>
+          <span>Take interactive assessments</span>
+        </div>
+        <div class="brand-feature">
+          <i class="fas fa-trophy"></i>
+          <span>Earn certificates</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Login Form -->
+    <div class="login-form-container">
+      <div class="login-form-card">
+        <div class="login-header">
+          <h1>Sign In</h1>
+          <p>Enter your credentials to access your account</p>
+        </div>
+
+        <%= form_with url: '/login', method: :post, class: "login-form" do |f| %>
+          <div class="form-group">
+            <%= f.label :email, "Email Address", class: "form-label" %>
+            <%= f.email_field :email, class: "form-input", placeholder: "Enter your email", required: true %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :password, "Password", class: "form-label" %>
+            <%= f.password_field :password, class: "form-input", placeholder: "Enter your password", required: true %>
+          </div>
+
+          <div class="form-options">
+            <label class="checkbox-container">
+              <%= f.check_box :remember_me, class: "checkbox-input" %>
+              <span class="checkbox-label">Remember me</span>
+            </label>
+            <%= link_to "Forgot password?", "#", class: "forgot-link" %>
+          </div>
+
+          <%= f.submit "Sign In", class: "login-submit-btn" %>
+
+          <div class="divider">
+            <span>or continue with</span>
+          </div>
+
+          <div class="social-login">
+            <button type="button" class="social-btn google-btn">
+              <i class="fab fa-google"></i>
+              <span>Google</span>
+            </button>
+            <button type="button" class="social-btn github-btn">
+              <i class="fab fa-github"></i>
+              <span>GitHub</span>
+            </button>
+            <button type="button" class="social-btn facebook-btn">
+              <i class="fab fa-facebook-f"></i>
+              <span>Facebook</span>
+            </button>
+          </div>
+        <% end %>
+
+        <div class="login-footer">
+          <p>Don't have an account? <%= link_to "Create one", signup_path, class: "signup-link" %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

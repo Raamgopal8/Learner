@@ -1,0 +1,235 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        <span class="text-gradient">Tests</span>
+      </h1>
+      <p class="hero-subtitle text-gradient">
+        Challenge yourself with our comprehensive test collection. Assess your knowledge and track your learning progress across various subjects.
+      </p>
+      <div class="hero-actions">
+        <%= link_to "Create Test", new_test_path, class: "btn-primary" %>
+        <%= link_to "View All Tests", tests_path, class: "btn-secondary" %>
+      </div>
+    </div>
+    <div class="hero-image">
+      <i class="fas fa-clipboard-check"></i>
+    </div>
+  </div>
+
+  <div class="features-section">
+    <h2 class="section-title">Test Categories</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-brain"></i>
+        </div>
+        <h3>Knowledge Assessment</h3>
+        <p>Test your understanding of various subjects with our comprehensive assessment system.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <h3>Progress Tracking</h3>
+        <p>Monitor your learning progress and identify areas that need improvement.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <h3>Achievements</h3>
+        <p>Earn badges and certificates as you complete tests and reach milestones.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="features-section">
+    <h2 class="section-title">Popular Tests</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="test-header">
+          <div class="test-icon">
+            <i class="fas fa-code"></i>
+          </div>
+          <div class="test-difficulty easy">Easy</div>
+        </div>
+        <h3>JavaScript Fundamentals Quiz</h3>
+        <p>Test your basic JavaScript knowledge including variables, functions, loops, and DOM manipulation.</p>
+        <div class="test-meta">
+          <span class="questions"><i class="fas fa-question-circle"></i> 20 questions</span>
+          <span class="time"><i class="fas fa-clock"></i> 15 minutes</span>
+        </div>
+        <div class="test-footer">
+          <div class="attempts">
+            <i class="fas fa-users"></i>
+            <span>1,234 attempts</span>
+          </div>
+          <div class="pass-rate">
+            <i class="fas fa-percentage"></i>
+            <span>85% pass rate</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="test-header">
+          <div class="test-icon">
+            <i class="fas fa-database"></i>
+          </div>
+          <div class="test-difficulty medium">Medium</div>
+        </div>
+        <h3>SQL Query Challenge</h3>
+        <p>Challenge your SQL skills with complex queries, joins, subqueries, and database optimization.</p>
+        <div class="test-meta">
+          <span class="questions"><i class="fas fa-question-circle"></i> 15 questions</span>
+          <span class="time"><i class="fas fa-clock"></i> 25 minutes</span>
+        </div>
+        <div class="test-footer">
+          <div class="attempts">
+            <i class="fas fa-users"></i>
+            <span>856 attempts</span>
+          </div>
+          <div class="pass-rate">
+            <i class="fas fa-percentage"></i>
+            <span>72% pass rate</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="test-header">
+          <div class="test-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="test-difficulty easy">Easy</div>
+        </div>
+        <h3>Data Structures Assessment</h3>
+        <p>Evaluate your understanding of arrays, linked lists, stacks, queues, and trees.</p>
+        <div class="test-meta">
+          <span class="questions"><i class="fas fa-question-circle"></i> 25 questions</span>
+          <span class="time"><i class="fas fa-clock"></i> 30 minutes</span>
+        </div>
+        <div class="test-footer">
+          <div class="attempts">
+            <i class="fas fa-users"></i>
+            <span>2,145 attempts</span>
+          </div>
+          <div class="pass-rate">
+            <i class="fas fa-percentage"></i>
+            <span>78% pass rate</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="test-header">
+          <div class="test-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <div class="test-difficulty hard">Hard</div>
+        </div>
+        <h3>React Advanced Concepts</h3>
+        <p>Advanced React topics including hooks, context, performance optimization, and testing.</p>
+        <div class="test-meta">
+          <span class="questions"><i class="fas fa-question-circle"></i> 18 questions</span>
+          <span class="time"><i class="fas fa-clock"></i> 40 minutes</span>
+        </div>
+        <div class="test-footer">
+          <div class="attempts">
+            <i class="fas fa-users"></i>
+            <span>543 attempts</span>
+          </div>
+          <div class="pass-rate">
+            <i class="fas fa-percentage"></i>
+            <span>45% pass rate</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="test-header">
+          <div class="test-icon">
+            <i class="fas fa-palette"></i>
+          </div>
+          <div class="test-difficulty medium">Medium</div>
+        </div>
+        <h3>Design Principles Test</h3>
+        <p>Assess your knowledge of UI/UX principles, color theory, typography, and design systems.</p>
+        <div class="test-meta">
+          <span class="questions"><i class="fas fa-question-circle"></i> 22 questions</span>
+          <span class="time"><i class="fas fa-clock"></i> 20 minutes</span>
+        </div>
+        <div class="test-footer">
+          <div class="attempts">
+            <i class="fas fa-users"></i>
+            <span>987 attempts</span>
+          </div>
+          <div class="pass-rate">
+            <i class="fas fa-percentage"></i>
+            <span>68% pass rate</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="test-header">
+          <div class="test-icon">
+            <i class="fas fa-language"></i>
+          </div>
+          <div class="test-difficulty easy">Easy</div>
+        </div>
+        <h3>English Grammar Challenge</h3>
+        <p>Test your English grammar, vocabulary, and comprehension skills with this comprehensive assessment.</p>
+        <div class="test-meta">
+          <span class="questions"><i class="fas fa-question-circle"></i> 30 questions</span>
+          <span class="time"><i class="fas fa-clock"></i> 25 minutes</span>
+        </div>
+        <div class="test-footer">
+          <div class="attempts">
+            <i class="fas fa-users"></i>
+            <span>3,456 attempts</span>
+          </div>
+          <div class="pass-rate">
+            <i class="fas fa-percentage"></i>
+            <span>92% pass rate</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-section">
+    <div class="stats-container">
+      <div class="stat-item">
+        <div class="stat-number">5,000+</div>
+        <div class="stat-label">Tests Available</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">50,000+</div>
+        <div class="stat-label">Test Attempts</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">200+</div>
+        <div class="stat-label">Subjects Covered</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">85%</div>
+        <div class="stat-label">Average Score</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-section">
+    <div class="container mx-auto px-4 py-16 text-center">
+      <h2 class="text-3xl font-bold mb-6 text-white">Ready to Test Your Knowledge?</h2>
+      <p class="text-xl mb-8 max-w-2xl mx-auto text-white">
+        Choose from thousands of tests across various subjects and skill levels.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <%= link_to "Start Testing", "#", class: "bg-white text-purple-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors" %>
+        <%= link_to "View Results", "#", class: "bg-white text-purple-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors" %>
+      </div>
+    </div>
+  </div>
+</div>

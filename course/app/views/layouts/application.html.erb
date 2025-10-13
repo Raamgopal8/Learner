@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorx - Your Learning Platform</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= stylesheet_link_tag 'courses', media: 'all' %>
+  <%= stylesheet_link_tag 'tests', media: 'all' %>
+  <%= javascript_importmap_tags %>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-gray-50">
+  <!-- Floating Navbar -->
+  <div class="navbar-container">
+    <nav class="navbar">
+      <!-- Left side - Logo -->
+      <div class="navbar-left">
+        <%= link_to root_path, class: "logo" do %>
+          <i class="fas fa-graduation-cap"></i>
+          <span>Tutorx</span>
+        <% end %>
+      </div>
+
+      <!-- Center - Navigation Links -->
+      <div class="navbar-center">
+        <%= link_to "Home", root_path, class: "nav-link" %>
+        <%= link_to "Tests", tests_path, class: "nav-link" %>
+        <%= link_to "Courses", courses_path, class: "nav-link" %>
+        <%= link_to "About", about_path, class: "nav-link" %>
+      </div>
+
+      <!-- Right side - Profile Button -->
+      <div class="navbar-right">
+        <%= link_to login_path, class: "profile-button" do %>
+          <i class="fas fa-user user-icon"></i>
+          <span>Login</span>
+        <% end %>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <%= yield %>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Tutorx</h3>
+        <p>Your gateway to endless learning opportunities</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><%= link_to "Home", root_path %></li>
+          <li><%= link_to "Courses", courses_path %></li>
+          <li><%= link_to "Tests", tests_path %></li>
+          <li><%= link_to "About", about_path %></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <p>Email: info@Tutorx.com</p>
+        <p>Phone: +1 (555) 123-4567</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; <%= Time.current.year %> Tutorx. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

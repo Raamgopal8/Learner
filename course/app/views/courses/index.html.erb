@@ -1,0 +1,214 @@
+<div class="courses-section">
+  <!-- Hero Section -->
+  <div class="courses-hero">
+    <div class="container mx-auto px-4 py-12 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4 text-gradient">Explore Our Courses</h1>
+      <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+        Discover comprehensive courses designed to help you master new skills and advance your career.
+        Filter and find the perfect course for your learning journey.
+      </p>
+
+      <!-- Search Bar -->
+      <div class="max-w-md mx-auto">
+        <%= form_with url: courses_path, method: :get, class: "search-form" do |f| %>
+          <div class="relative">
+            <%= f.text_field :search, placeholder: "Search courses...",
+                           class: "search-input",
+                           value: params[:search] %>
+            <button type="submit" class="search-btn">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-8">
+    <div class="courses-container">
+      <!-- Filters Sidebar -->
+      <div class="filters-sidebar">
+        <div class="filters-card">
+          <h3 class="filters-title">Filters</h3>
+
+          <!-- Category Filter -->
+          <div class="filter-group">
+            <h4 class="filter-label">Category</h4>
+            <%= form_with url: courses_path, method: :get, class: "filter-form" do |f| %>
+              <%= f.hidden_field :search, value: params[:search] %>
+              <%= f.hidden_field :level, value: params[:level] %>
+              <%= f.hidden_field :sort, value: params[:sort] %>
+              <div class="filter-options">
+                <% @categories.each do |category| %>
+                  <label class="filter-checkbox">
+                    <%= f.check_box :category, { multiple: true, checked: params[:category]&.include?(category) }, category, nil %>
+                    <span class="checkmark"></span>
+                    <%= category %>
+                  </label>
+                <% end %>
+              </div>
+              <%= f.submit "Apply Filters", class: "filter-btn" %>
+            <% end %>
+          </div>
+
+          <!-- Level Filter -->
+          <div class="filter-group">
+            <h4 class="filter-label">Level</h4>
+            <%= form_with url: courses_path, method: :get, class: "filter-form" do |f| %>
+              <%= f.hidden_field :search, value: params[:search] %>
+              <%= f.hidden_field :category, value: params[:category] %>
+              <%= f.hidden_field :sort, value: params[:sort] %>
+              <div class="filter-options">
+                <% @levels.each do |level| %>
+                  <label class="filter-checkbox">
+                    <%= f.radio_button :level, level, checked: params[:level] == level %>
+                    <span class="radio-checkmark"></span>
+                    <%= level %>
+                  </label>
+                <% end %>
+              </div>
+              <%= f.submit "Apply Filters", class: "filter-btn" %>
+            <% end %>
+          </div>
+
+          <!-- Sort Options -->
+          <div class="filter-group">
+            <h4 class="filter-label">Sort By</h4>
+            <%= form_with url: courses_path, method: :get, class: "filter-form" do |f| %>
+              <%= f.hidden_field :search, value: params[:search] %>
+              <%= f.hidden_field :category, value: params[:category] %>
+              <%= f.hidden_field :level, value: params[:level] %>
+              <div class="sort-options">
+                <label class="sort-option">
+                  <%= f.radio_button :sort, 'newest', checked: params[:sort] == 'newest' || params[:sort].blank? %>
+                  <span class="radio-checkmark"></span>
+                  Newest First
+                </label>
+                <label class="sort-option">
+                  <%= f.radio_button :sort, 'featured', checked: params[:sort] == 'featured' %>
+                  <span class="radio-checkmark"></span>
+                  Featured
+                </label>
+                <label class="sort-option">
+                  <%= f.radio_button :sort, 'price_low', checked: params[:sort] == 'price_low' %>
+                  <span class="radio-checkmark"></span>
+                  Price: Low to High
+                </label>
+                <label class="sort-option">
+                  <%= f.radio_button :sort, 'price_high', checked: params[:sort] == 'price_high' %>
+                  <span class="radio-checkmark"></span>
+                  Price: High to Low
+                </label>
+              </div>
+              <%= f.submit "Apply Sort", class: "filter-btn" %>
+            <% end %>
+          </div>
+
+          <!-- Clear Filters -->
+          <div class="filter-actions">
+            <%= link_to "Clear All Filters", courses_path, class: "clear-filters-btn" %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Courses Grid -->
+      <div class="courses-main">
+        <!-- Results Header -->
+        <div class="results-header">
+          <div class="results-info">
+            <h2 class="results-title">Available Courses</h2>
+            <p class="results-count">
+              <%= pluralize(@courses.total_count, 'course') %> found
+              <% if params[:search].present? %>
+                for "<%= params[:search] %>"
+              <% end %>
+              <% if params[:category].present? %>
+                in <%= params[:category].join(', ') %>
+              <% end %>
+              <% if params[:level].present? %>
+                (Level: <%= params[:level] %>)
+              <% end %>
+            </p>
+          </div>
+
+          <!-- Mobile Filter Toggle -->
+          <button class="mobile-filter-toggle">
+            <i class="fas fa-filter"></i>
+            Filters
+          </button>
+        </div>
+
+        <!-- Featured Courses Section -->
+        <% if @featured_courses.any? && !params[:category].present? && !params[:level].present? && !params[:search].present? %>
+          <div class="featured-section">
+            <h3 class="section-subtitle">Featured Courses</h3>
+            <div class="featured-grid">
+              <% @featured_courses.each do |course| %>
+                <%= render partial: 'course_card', locals: { course: course } %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- All Courses Grid -->
+        <% if @courses.any? %>
+          <div class="courses-grid">
+            <% @courses.each do |course| %>
+              <%= render partial: 'course_card', locals: { course: course } %>
+            <% end %>
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination-container">
+            <%= paginate @courses %>
+          </div>
+        <% else %>
+          <div class="no-results">
+            <div class="no-results-icon">
+              <i class="fas fa-search"></i>
+            </div>
+            <h3>No courses found</h3>
+            <p>Try adjusting your filters or search terms.</p>
+            <%= link_to "View All Courses", courses_path, class: "btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile Filters Overlay -->
+<div class="mobile-filters-overlay">
+  <div class="mobile-filters-content">
+    <div class="mobile-filters-header">
+      <h3>Filters</h3>
+      <button class="close-mobile-filters">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <!-- Mobile filters content would go here -->
+  </div>
+</div>
+
+<script>
+// Mobile filter toggle functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const mobileFilterToggle = document.querySelector('.mobile-filter-toggle');
+  const mobileFiltersOverlay = document.querySelector('.mobile-filters-overlay');
+  const closeMobileFilters = document.querySelector('.close-mobile-filters');
+
+  if (mobileFilterToggle && mobileFiltersOverlay) {
+    mobileFilterToggle.addEventListener('click', function() {
+      mobileFiltersOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  }
+
+  if (closeMobileFilters && mobileFiltersOverlay) {
+    closeMobileFilters.addEventListener('click', function() {
+      mobileFiltersOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  }
+});
+</script>

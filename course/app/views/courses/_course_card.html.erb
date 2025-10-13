@@ -1,0 +1,54 @@
+<!-- Course Card Partial -->
+<div class="course-card">
+  <div class="course-image">
+    <% if course.image_url.present? %>
+      <img src="<%= course.image_url %>" alt="<%= course.title %>" />
+    <% else %>
+      <div class="course-icon-placeholder">
+        <i class="fas fa-book"></i>
+      </div>
+    <% end %>
+    <div class="course-level-badge <%= course.level.downcase %>">
+      <%= course.level %>
+    </div>
+    <% if course.featured %>
+      <div class="featured-badge">
+        <i class="fas fa-star"></i>
+        Featured
+      </div>
+    <% end %>
+  </div>
+
+  <div class="course-content">
+    <div class="course-category"><%= course.category %></div>
+    <h3 class="course-title"><%= link_to course.title, course %></h3>
+    <p class="course-description"><%= truncate(course.description, length: 100) %></p>
+
+    <div class="course-meta">
+      <div class="instructor-info">
+        <i class="fas fa-user-graduate"></i>
+        <span><%= course.instructor %></span>
+      </div>
+      <div class="duration-info">
+        <i class="fas fa-clock"></i>
+        <span><%= course.duration %> hours</span>
+      </div>
+    </div>
+
+    <div class="course-footer">
+      <div class="course-rating">
+        <div class="stars">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star-half-alt"></i>
+        </div>
+        <span class="rating-text">4.5 (120 reviews)</span>
+      </div>
+      <div class="course-price">
+        <%= course.formatted_price %>
+      </div>
+    </div>
+  </div>
+</div>

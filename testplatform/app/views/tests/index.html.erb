@@ -1,0 +1,16 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Available Tests</h2>
+  <div class="row">
+    <% @tests.each do |test| %>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body text-center">
+            <h5 class="card-title"><%= test.title %></h5>
+            <p class="card-text"><%= test.description %></p>
+            <%= link_to 'Start Test', test_path(test), class: 'btn btn-success w-100' %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
