@@ -1,0 +1,260 @@
+<div class="course-show" style="max-width: 1200px; margin: 40px auto; font-family: 'Segoe UI', sans-serif;">
+
+  <!-- Course Header -->
+  <div style="text-align: center; margin-bottom: 40px;">
+    <h1 style="color: #2c3e50; margin-bottom: 10px; font-size: 2.5rem;">
+      <%= @course.title %>
+    </h1>
+    <p style="color: #7f8c8d; font-size: 1.1rem;">
+      <%= @course.category %> • <%= @course.level %> • <%= @course.duration %> hours
+    </p>
+  </div>
+
+  <!-- Course Image -->
+  <% if @course.image.attached? %>
+    <div style="text-align: center; margin-bottom: 40px;">
+      <%= image_tag @course.image, style: "width: 100%; max-height: 400px; object-fit: cover; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.15);" %>
+    </div>
+  <% end %>
+
+  <!-- Course Content Tabs -->
+  <div style="background: white; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;">
+    <!-- Tab Navigation -->
+    <div style="background: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+      <div style="display: flex; max-width: 100%; overflow-x: auto;">
+        <button class="tab-button active" onclick="showTab('overview')" style="flex: 1; padding: 20px; background: none; border: none; cursor: pointer; font-weight: 600; color: #6c757d; transition: all 0.3s ease; white-space: nowrap;">
+          📋 Overview
+        </button>
+        <button class="tab-button" onclick="showTab('curriculum')" style="flex: 1; padding: 20px; background: none; border: none; cursor: pointer; font-weight: 600; color: #6c757d; transition: all 0.3s ease; white-space: nowrap;">
+          📚 Curriculum
+        </button>
+        <button class="tab-button" onclick="showTab('progress')" style="flex: 1; padding: 20px; background: none; border: none; cursor: pointer; font-weight: 600; color: #6c757d; transition: all 0.3s ease; white-space: nowrap;">
+          📊 Progress
+        </button>
+        <button class="tab-button" onclick="showTab('details')" style="flex: 1; padding: 20px; background: none; border: none; cursor: pointer; font-weight: 600; color: #6c757d; transition: all 0.3s ease; white-space: nowrap;">
+          ℹ️ Details
+        </button>
+      </div>
+    </div>
+
+    <!-- Tab Content -->
+    <div style="padding: 30px;">
+      <!-- Overview Tab -->
+      <div id="overview" class="tab-content" style="display: block;">
+        <h3 style="color: #2c3e50; margin-bottom: 20px;">📖 Course Overview</h3>
+        <p style="line-height: 1.8; color: #34495e; font-size: 1.1rem; margin-bottom: 30px;">
+          <%= @course.description %>
+        </p>
+
+        <div style="background: #f0f8ff; padding: 25px; border-radius: 10px; border-left: 4px solid #3498db; margin-bottom: 30px;">
+          <h4 style="color: #2980b9; margin-bottom: 15px;">🎯 What You'll Learn</h4>
+          <p style="line-height: 1.7; color: #2c3e50; margin-bottom: 20px;">
+            This comprehensive course will equip you with essential skills and knowledge in <%= @course.category.downcase %>.
+            Through hands-on projects and practical exercises, you'll master key concepts and techniques.
+          </p>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+            <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              <h5 style="color: #27ae60; margin-bottom: 10px;">🚀 Key Skills</h5>
+              <ul style="color: #34495e; line-height: 1.6;">
+                <li>Practical application of concepts</li>
+                <li>Problem-solving techniques</li>
+                <li>Industry best practices</li>
+                <li>Real-world project experience</li>
+              </ul>
+            </div>
+            <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              <h5 style="color: #e74c3c; margin-bottom: 10px;">📈 Learning Outcomes</h5>
+              <ul style="color: #34495e; line-height: 1.6;">
+                <li>Build complete projects from scratch</li>
+                <li>Understand core principles and methodologies</li>
+                <li>Apply knowledge to real-world scenarios</li>
+                <li>Develop professional portfolio pieces</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Curriculum Tab -->
+      <div id="curriculum" class="tab-content" style="display: none;">
+        <h3 style="color: #2c3e50; margin-bottom: 20px;">📚 Course Curriculum</h3>
+        <p style="color: #6c757d; margin-bottom: 30px;">Complete course breakdown with modules and lessons</p>
+
+        <!-- Module 1 -->
+        <div style="background: white; margin-bottom: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;">
+          <div style="background: #6c5ce7; color: white; padding: 15px 20px;">
+            <h4 style="margin: 0;">Module 1: Introduction to Course</h4>
+          </div>
+          <div style="padding: 20px;">
+            <div style="display: flex; align-items: center; margin-bottom: 12px; padding: 10px; background: #f8f9fa; border-radius: 6px;">
+              <span style="background: #28a745; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-right: 12px;">✓</span>
+              <div style="flex: 1;">
+                <h6 style="margin: 0;">Course Introduction & Overview</h6>
+                <p style="margin: 4px 0 0 0; color: #6c757d; font-size: 14px;">Understanding what you'll learn and course structure</p>
+              </div>
+              <span style="color: #28a745; font-size: 12px;">10 min</span>
+            </div>
+            <div style="display: flex; align-items: center; margin-bottom: 12px; padding: 10px; background: #f8f9fa; border-radius: 6px;">
+              <span style="background: #28a745; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-right: 12px;">✓</span>
+              <div style="flex: 1;">
+                <h6 style="margin: 0;">Setting Up Your Learning Environment</h6>
+                <p style="margin: 4px 0 0 0; color: #6c757d; font-size: 14px;">Tools and software needed for the course</p>
+              </div>
+              <span style="color: #28a745; font-size: 12px;">15 min</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module 2 -->
+        <div style="background: white; margin-bottom: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;">
+          <div style="background: #6c5ce7; color: white; padding: 15px 20px;">
+            <h4 style="margin: 0;">Module 2: Basics of the Course</h4>
+          </div>
+          <div style="padding: 20px;">
+            <div style="display: flex; align-items: center; margin-bottom: 12px; padding: 10px; background: #fff3cd; border-radius: 6px;">
+              <span style="background: #ffc107; color: #212529; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-right: 12px;">○</span>
+              <div style="flex: 1;">
+                <h6 style="margin: 0;">Fundamental Concepts</h6>
+                <p style="margin: 4px 0 0 0; color: #6c757d; font-size: 14px;">Core principles and basic terminology</p>
+              </div>
+              <span style="color: #6c757d; font-size: 12px;">25 min</span>
+            </div>
+            <div style="display: flex; align-items: center; margin-bottom: 12px; padding: 10px; background: #fff3cd; border-radius: 6px;">
+              <span style="background: #ffc107; color: #212529; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-right: 12px;">○</span>
+              <div style="flex: 1;">
+                <h6 style="margin: 0;">Basic Implementation</h6>
+                <p style="margin: 4px 0 0 0; color: #6c757d; font-size: 14px;">First practical exercises and examples</p>
+              </div>
+              <span style="color: #6c757d; font-size: 12px;">40 min</span>
+            </div>
+            <div style="display: flex; align-items: center; margin-bottom: 12px; padding: 10px; background: #fff3cd; border-radius: 6px;">
+              <span style="background: #ffc107; color: #212529; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-right: 12px;">○</span>
+              <div style="flex: 1;">
+                <h6 style="margin: 0;">Basic Project</h6>
+                <p style="margin: 4px 0 0 0; color: #6c757d; font-size: 14px;">Building your first complete project</p>
+              </div>
+              <span style="color: #6c757d; font-size: 12px;">60 min</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module 3 -->
+        <div style="background: white; margin-bottom: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;">
+          <div style="background: #6c5ce7; color: white; padding: 15px 20px;">
+            <h4 style="margin: 0;">Module 3: Advanced Topics</h4>
+          </div>
+          <div style="padding: 20px;">
+            <div style="display: flex; align-items: center; margin-bottom: 12px; padding: 10px; background: #fff3cd; border-radius: 6px;">
+              <span style="background: #ffc107; color: #212529; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-right: 12px;">○</span>
+              <div style="flex: 1;">
+                <h6 style="margin: 0;">Advanced Techniques</h6>
+                <p style="margin: 4px 0 0 0; color: #6c757d; font-size: 14px;">Complex concepts and advanced methodologies</p>
+              </div>
+              <span style="color: #6c757d; font-size: 12px;">45 min</span>
+            </div>
+            <div style="display: flex; align-items: center; margin-bottom: 12px; padding: 10px; background: #fff3cd; border-radius: 6px;">
+              <span style="background: #ffc107; color: #212529; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-right: 12px;">○</span>
+              <div style="flex: 1;">
+                <h6 style="margin: 0;">Best Practices</h6>
+                <p style="margin: 4px 0 0 0; color: #6c757d; font-size: 14px;">Industry standards and professional approaches</p>
+              </div>
+              <span style="color: #6c757d; font-size: 12px;">35 min</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Tab -->
+      <div id="progress" class="tab-content" style="display: none;">
+        <h3 style="color: #2c3e50; margin-bottom: 20px;">📊 Learning Progress</h3>
+        <div style="background: #fff8e1; padding: 25px; border-radius: 10px; border-left: 4px solid #f39c12;">
+          <!-- Progress Overview -->
+          <div style="margin-bottom: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <span style="font-weight: 600; color: #2c3e50;">Overall Progress</span>
+              <span style="font-weight: 600; color: #27ae60;">0%</span>
+            </div>
+            <div style="width: 100%; background: #ecf0f1; border-radius: 10px; height: 12px;">
+              <div style="width: 0%; background: linear-gradient(90deg, #27ae60, #2ecc71); border-radius: 10px; height: 12px; transition: width 0.3s ease;"></div>
+            </div>
+          </div>
+
+          <!-- Course Statistics -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
+            <div style="text-align: center; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              <div style="font-size: 24px; font-weight: bold; color: #e74c3c;">0</div>
+              <div style="color: #7f8c8d;">Lessons Completed</div>
+            </div>
+            <div style="text-align: center; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              <div style="font-size: 24px; font-weight: bold; color: #3498db;">8</div>
+              <div style="color: #7f8c8d;">Total Lessons</div>
+            </div>
+            <div style="text-align: center; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              <div style="font-size: 24px; font-weight: bold; color: #9b59b6;">0</div>
+              <div style="color: #7f8c8d;">Hours Completed</div>
+            </div>
+            <div style="text-align: center; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              <div style="font-size: 24px; font-weight: bold; color: #f39c12;"><%= @course.duration %></div>
+              <div style="color: #7f8c8d;">Total Hours</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Details Tab -->
+      <div id="details" class="tab-content" style="display: none;">
+        <h3 style="color: #2c3e50; margin-bottom: 20px;">ℹ️ Course Information</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px;">
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+            <h5 style="color: #495057; margin-bottom: 15px;">📝 Basic Information</h5>
+            <div style="margin-bottom: 10px;"><strong>Instructor:</strong> <%= @course.instructor %></div>
+            <div style="margin-bottom: 10px;"><strong>Duration:</strong> <%= @course.duration %> hours</div>
+            <div style="margin-bottom: 10px;"><strong>Level:</strong> <%= @course.level %></div>
+            <div style="margin-bottom: 10px;"><strong>Category:</strong> <%= @course.category %></div>
+            <div style="margin-bottom: 10px;"><strong>Price:</strong> <%= @course.formatted_price %></div>
+            <% if @course.featured %>
+              <div style="margin-bottom: 10px;"><strong>Status:</strong> <span style="color: #e74c3c;">⭐ Featured Course</span></div>
+            <% end %>
+          </div>
+
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+            <h5 style="color: #495057; margin-bottom: 15px;">📊 Course Statistics</h5>
+            <div style="margin-bottom: 10px;"><strong>Rating:</strong> <%= @course.rating %>/5.0</div>
+            <div style="margin-bottom: 10px;"><strong>Total Reviews:</strong> <%= @course.reviews_count %></div>
+            <div style="margin-bottom: 10px;"><strong>Students Enrolled:</strong> 1,234</div>
+            <div style="margin-bottom: 10px;"><strong>Last Updated:</strong> <%= @course.updated_at.strftime('%B %d, %Y') %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Back Button -->
+  <div style="margin-top: 40px; text-align: center;">
+    <%= link_to '← Back to Courses', courses_path,
+          style: "display: inline-block; padding: 12px 30px; background: #3498db; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: background 0.3s ease;" %>
+  </div>
+
+</div>
+
+<script>
+function showTab(tabName) {
+  // Hide all tab contents
+  const tabContents = document.querySelectorAll('.tab-content');
+  tabContents.forEach(content => {
+    content.style.display = 'none';
+  });
+
+  // Remove active class from all tab buttons
+  const tabButtons = document.querySelectorAll('.tab-button');
+  tabButtons.forEach(button => {
+    button.classList.remove('active');
+  });
+
+  // Show selected tab content
+  document.getElementById(tabName).style.display = 'block';
+
+  // Add active class to clicked button
+  event.target.classList.add('active');
+}
+</script>

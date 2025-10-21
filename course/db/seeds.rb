@@ -10,21 +10,7 @@
 
 # Seed data for courses
 courses_data = [
-  {
-    title: "Complete Web Development Bootcamp",
-    description: "Master HTML, CSS, JavaScript, React, Node.js, and build real-world projects from scratch.",
-    instructor: "John Smith",
-    duration: 40,
-    price: 4999.00,
-    level: "Beginner",
-    category: "Web Development",
-    featured: true,
-    rating: 4.8,
-    reviews_count: 2345,
-    course_icon: "",
-    image_url: "https://www.cromacampus.com/public/uploads/Blog/2024/09/week_2/web-development-course-syllabus-for-beginners-66e1713a7bcfc.webp",
-    
-  },
+  
   {
     title: "UI/UX Design Fundamentals",
     description: "Learn design principles, user research, wireframing, and prototyping for modern interfaces.",
@@ -109,21 +95,7 @@ courses_data = [
     course_icon: "",
     image_url:"https://shibajidebnath.com/wp-content/uploads/2024/05/ReactJS-and-Next-JS.jpg.webp"
   },
-  {
-    title: "Advanced UI/UX Design",
-    description: "Master advanced design principles, user research, prototyping, and design systems.",
-    instructor: "Emily Davis",
-    duration: 32,
-    price: 6999.00,
-    level: "Advanced",
-    category: "UI/UX Design",
-    featured: false,
-    rating: 4.9,
-    reviews_count: 756,
-    course_icon: "",
-    image_url:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ0l1MKP73zUH3sWSveRNp5kKb_yxY1RxA4g&s"
-  },
-  {
+    {
     title: "Deep Learning Specialization",
     description: "Master neural networks, CNNs, RNNs, and build AI applications with TensorFlow.",
     instructor: "Dr. Priya Sharma",

@@ -1,7 +1,7 @@
 class Course < ApplicationRecord
   validates :title, :description, :instructor, :duration, :price, :level, :category, presence: true
   validates :price, numericality: { greater_than_or_equal_to: 0 }
-
+  has_one_attached :image
   # Scopes for filtering
   scope :by_category, ->(category) { where(category: category) }
   scope :by_level, ->(level) { where(level: level) }
