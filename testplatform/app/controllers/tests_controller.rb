@@ -1,15 +1,12 @@
 class TestsController < ApplicationController
-   # before_action :require_login
-    def index
-      @tests = Test.all
-    end
-  
-    def show
-      @test = Test.find(params[:id])
-  
-      # Create an attempt record when user starts
-      @attempt = current_user.attempts.create(test: @test, started_at: Time.current)
-  
-      # We'll render a JS-enabled page that fetches questions via JSON
-    end
+  def index
+    # Use DB to fetch tests
+    @tests = DB.exec("SELECT * FROM tests ORDER BY created_at DESC").to_a
   end
+
+  def show
+    test_id = params[:id]
+    @test = DB.exec_params("SELECT * FROM tests WHERE id=$1 LIMIT 1", [test_id]).first
+    @questions = DB.exec_params("SELECT * FROM questions WHERE test_id=$1 ORDER BY id ASC", [test_id]).to_a
+  end
+end

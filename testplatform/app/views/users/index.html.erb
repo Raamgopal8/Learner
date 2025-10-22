@@ -1,0 +1,28 @@
+<div class="card">
+  <h2 class="text-xl font-semibold mb-4">Manage Users</h2>
+
+  <form action="/users" method="post" class="flex gap-3 mb-6">
+    <input type="text" name="name" placeholder="Name" class="input-field" />
+    <input type="email" name="email" placeholder="Email" class="input-field" />
+    <input type="submit" value="Add User" class="btn-primary" />
+  </form>
+
+  <table class="table-base">
+    <thead class="table-header">
+      <tr>
+        <th class="table-cell">ID</th>
+        <th class="table-cell">Name</th>
+        <th class="table-cell">Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr class="hover:bg-gray-50">
+          <td class="table-cell"><%= user['id'] %></td>
+          <td class="table-cell"><%= user['name'] %></td>
+          <td class="table-cell"><%= user['email'] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

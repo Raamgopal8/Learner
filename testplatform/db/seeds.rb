@@ -1,114 +1,71 @@
-puts "Seeding TutorX Test Platform..."
+require_relative '../config/initializers/db_connections'
 
-# ------------------------
-# 1. Users
-# ------------------------
-admin = User.create!(
-  email: 'admin@tutorx.com',
-  password: 'admin123',
-  first_name: 'Admin',
-  last_name: 'User',
-  role: 'admin'
+puts "Seeding database..."
+
+# -------- Users --------
+users = [
+  { name: 'Alice Johnson', email: 'alice@example.com' },
+  { name: 'Bob Smith', email: 'bob@example.com' }
+]
+
+users.each do |u|
+  DB.exec_params(
+    "INSERT INTO users (name, email) VALUES ($1, $2)
+     ON CONFLICT (email) DO NOTHING;",
+    [u[:name], u[:email]]
+  )
+end
+puts "Users seeded."
+
+# -------- Single Combined Test --------
+DB.exec_params(
+  "INSERT INTO tests (title, description, duration_in_minutes)
+   VALUES ($1, $2, $3)
+   ON CONFLICT (title) DO NOTHING;",
+  ['Master Test', 'All questions combined into a single test', 60]
 )
 
-teacher = User.create!(
-  email: 'teacher@tutorx.com',
-  password: 'teacher123',
-  first_name: 'John',
-  last_name: 'Teacher',
-  role: 'teacher'
-)
+# Get test ID
+test_id = DB.exec_params("SELECT id FROM tests WHERE title=$1 LIMIT 1", ['Master Test']).first['id']
 
-student = User.create!(
-  email: 'student@tutorx.com',
-  password: 'student123',
-  first_name: 'Alice',
-  last_name: 'Student',
-  role: 'student'
-)
+puts "Master Test created with ID #{test_id}."
 
-# ------------------------
-# 2. Tests
-# ------------------------
-math_test = Test.create!(
-  title: 'Basic Algebra Quiz',
-  duration_minutes: 30,
-  created_by: teacher
-)
+# -------- Questions --------
+questions = [
+  ['Which of the following is not a JavaScript framework?', 'React', 'Angular', 'Laravel', 'Vue', 'C'],
+  ['In HTTP, which status code indicates a successful request?', '200', '301', '404', '500', 'A'],
+  ['What does CSS stand for?', 'Cascading Script Sheets', 'Cascading Style Sheets', 'Computer Style Sheets', 'Color Styling System', 'B'],
+  ['Which of the following is used to manage dependencies in Node.js?', 'PIP', 'NPM', 'Composer', 'Maven', 'B'],
+  ['Which language is primarily used for developing iOS applications?', 'Kotlin', 'Dart', 'Swift', 'Java', 'C'],
+  ['Flutter uses which programming language?', 'Java', 'Dart', 'Kotlin', 'TypeScript', 'B'],
+  ['Which Android component is responsible for responding to user interaction with the app?', 'Fragment', 'Intent', 'Activity', 'BroadcastReceiver', 'C'],
+  ['What is the purpose of Gradle in Android development?', 'UI Designing', 'Version Control', 'Build Automation', 'Code Compilation only', 'C'],
+  ['The MERN stack includes:', 'MySQL, Express, React, Node', 'MongoDB, Express, React, Node', 'MongoDB, Ember, Rails, Node', 'Meteor, Express, React, Node', 'B'],
+  ['Which HTTP method is used to update existing data in a REST API?', 'POST', 'PUT', 'GET', 'DELETE', 'B'],
+  ['Which of the following best describes JWT (JSON Web Token)?', 'Encryption algorithm', 'Authentication token format', 'JavaScript library', 'Server configuration file', 'B'],
+  ['In a CI/CD pipeline, “CI” stands for:', 'Continuous Initialization', 'Continuous Integration', 'Continuous Installation', 'Continuous Implementation', 'B'],
+  ['Which principle emphasizes ''Users should not have to remember information from one part of the interface to another''?', 'Visibility of system status', 'Recognition rather than recall', 'Consistency and standards', 'Aesthetic and minimalist design', 'B'],
+  ['The Golden Ratio is often used in UI design for:', 'Database relationships', 'Layout proportions', 'Color palette generation', 'Typography spacing', 'B'],
+  ['Which of these tools is commonly used for UI prototyping?', 'Postman', 'Figma', 'Git', 'Jenkins', 'B'],
+  ['What is the key purpose of ''Wireframing'' in UX design?', 'Define database schema', 'Show final visual design', 'Layout structure and user flow', 'Optimize code performance', 'C'],
+  ['Which of the following is a supervised learning algorithm?', 'K-Means Clustering', 'Decision Tree', 'DBSCAN', 'PCA', 'B'],
+  ['Overfitting occurs when:', 'The model performs poorly on training data', 'The model generalizes well', 'The model performs well on training but poorly on test data', 'The dataset is too small', 'C'],
+  ['What does Gradient Descent optimize?', 'Accuracy directly', 'Cost/Loss function', 'Learning rate', 'Model weights only', 'B'],
+  ['Which library is primarily used for deep learning in Python?', 'Pandas', 'TensorFlow', 'NumPy', 'Matplotlib', 'B'],
+  ['Which of the following techniques allows an AI model to learn from interaction with the environment?', 'Supervised Learning', 'Reinforcement Learning', 'Semi-supervised Learning', 'Transfer Learning', 'B'],
+  ['The attention mechanism is a key concept in:', 'Decision Trees', 'Recurrent Neural Networks', 'Transformers', 'Naive Bayes Classifiers', 'C'],
+  ['What is the purpose of Natural Language Processing (NLP)?', 'Image classification', 'Analyzing time series', 'Understanding human language', 'Generating SQL queries', 'C'],
+  ['Which data structure uses FIFO (First In, First Out) principle?', 'Stack', 'Queue', 'Tree', 'Graph', 'B'],
+  ['What is the time complexity of binary search on a sorted array?', 'O(n)', 'O(log n)', 'O(n²)', 'O(1)', 'B']
+]
 
-science_test = Test.create!(
-  title: 'General Science Knowledge',
-  duration_minutes: 25,
-  created_by: teacher
-)
+questions.each do |q|
+  DB.exec_params(
+    "INSERT INTO questions (test_id, question, option_a, option_b, option_c, option_d, correct_answer)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)",
+    [test_id, q[0], q[1], q[2], q[3], q[4], q[5]]
+  )
+end
 
-# ------------------------
-# 3. Questions & Options
-# Math Test
-# ------------------------
-math_q1 = Question.create!(
-  test: math_test,
-  text: 'What is the value of x in: 2x + 3 = 7?',
-  position: 1
-)
-math_q1_opt1 = Option.create!(question: math_q1, text: 'x = 2', correct: true)
-Option.create!(question: math_q1, text: 'x = 3', correct: false)
-Option.create!(question: math_q1, text: 'x = 4', correct: false)
-
-math_q2 = Question.create!(
-  test: math_test,
-  text: 'Solve: 3y - 5 = 10',
-  position: 2
-)
-Option.create!(question: math_q2, text: 'y = 3', correct: false)
-math_q2_opt2 = Option.create!(question: math_q2, text: 'y = 5', correct: true)
-Option.create!(question: math_q2, text: 'y = 7', correct: false)
-
-math_q3 = Question.create!(
-  test: math_test,
-  text: 'What is the square root of 144?',
-  position: 3
-)
-Option.create!(question: math_q3, text: '10', correct: false)
-math_q3_opt2 = Option.create!(question: math_q3, text: '12', correct: true)
-Option.create!(question: math_q3, text: '14', correct: false)
-
-# Science Test
-science_q1 = Question.create!(
-  test: science_test,
-  text: 'What is the chemical symbol for gold?',
-  position: 1
-)
-Option.create!(question: science_q1, text: 'Go', correct: false)
-science_q1_opt2 = Option.create!(question: science_q1, text: 'Au', correct: true)
-Option.create!(question: science_q1, text: 'Ag', correct: false)
-
-science_q2 = Question.create!(
-  test: science_test,
-  text: 'Which planet is known as the Red Planet?',
-  position: 2
-)
-Option.create!(question: science_q2, text: 'Venus', correct: false)
-science_q2_opt2 = Option.create!(question: science_q2, text: 'Mars', correct: true)
-Option.create!(question: science_q2, text: 'Jupiter', correct: false)
-
-# ------------------------
-# 4. Attempt & Answers
-# ------------------------
-# Creating an attempt for the student on math_test
-attempt = Attempt.create!(
-  user: student,
-  test: math_test,
-  started_at: 1.hour.ago,
-  finished_at: 45.minutes.ago,
-  submitted: true
-)
-
-# Answers (link correct options explicitly)
-Answer.create!(attempt: attempt, question: math_q1, option: math_q1_opt1)
-Answer.create!(attempt: attempt, question: math_q2, option: math_q2_opt2)
-Answer.create!(attempt: attempt, question: math_q3, option: math_q3_opt2)
-
-puts "Seed data created successfully!"
-puts "Summary:"
-puts "Users: #{User.count}, Tests: #{Test.count}, Questions: #{Question.count}, Options: #{Option.count}, Attempts: #{Attempt.count}, Answers: #{Answer.count}"
+puts "Questions seeded."
+puts "✅ Database seeding complete."

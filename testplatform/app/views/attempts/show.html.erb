@@ -1,0 +1,11 @@
+<div class="card">
+  <h2 class="text-xl font-semibold mb-4">Attempt Summary</h2>
+
+  <p><strong>User ID:</strong> <%= @attempt['user_id'] %></p>
+  <p><strong>Test ID:</strong> <%= @attempt['test_id'] %></p>
+  <p><strong>Started At:</strong> <%= @attempt['started_at'] %></p>
+  <p><strong>Submitted At:</strong> <%= @attempt['submitted_at'] || 'Not Submitted' %></p>
+  <p><strong>Score:</strong> <%= @attempt['score'] %></p>
+
+  <a href="/tests" class="btn-primary mt-4 inline-block">Back to Tests</a>
+</div>

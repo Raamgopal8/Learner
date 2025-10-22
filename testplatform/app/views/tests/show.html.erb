@@ -1,70 +1,34 @@
-<div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4><%= @test.title %></h4>
-    <div class="alert alert-info mb-0">
-      Time Left: <span id="timer" class="fw-bold"></span>
+<div class="card">
+  <h2><%= @test['title'] %></h2>
+
+  <!-- Timer Section -->
+  <div class="timer-container">
+    <div class="timer-bar">
+      <div id="timer-progress"></div>
     </div>
+    <p class="timer-text">
+      Time Remaining: <span id="time-display">00:00</span>
+    </p>
   </div>
 
-  <div id="fullscreen-message" class="alert alert-warning d-none">
-    Please enable fullscreen mode to continue the test.
-  </div>
+  <form id="test-form" action="/attempts" method="post">
+    <input type="hidden" name="user_id" value="1">
+    <input type="hidden" name="test_id" value="<%= @test['id'] %>">
 
-  <%= form_with url: attempts_path, method: :post, local: true, id: 'test-form' do %>
-    <% @test.questions.each_with_index do |question, index| %>
-      <div class="card mb-3">
-        <div class="card-header">
-          Q<%= index + 1 %>. <%= question.content %>
-        </div>
-        <div class="card-body">
-          <% question.options.each do |option| %>
-            <div class="form-check">
-              <%= radio_button_tag "answers[#{question.id}]", option.id, false, class: 'form-check-input', id: "option_#{option.id}" %>
-              <%= label_tag "option_#{option.id}", option.text, class: 'form-check-label' %>
-            </div>
+    <% @questions.each_with_index do |q, i| %>
+      <div class="question">
+        <p>Q<%= i + 1 %>. <%= q['content'] %></p>
+        <div class="options">
+          <% ['A', 'B', 'C', 'D'].each do |opt| %>
+            <label>
+              <input type="radio" name="answers[<%= q['id'] %>]" value="<%= opt %>">
+              <%= q["option_#{opt.downcase}"] %>
+            </label>
           <% end %>
         </div>
       </div>
     <% end %>
-    <%= submit_tag 'Submit Test', class: 'btn btn-primary w-100' %>
-  <% end %>
+
+    <button type="submit" class="btn-primary">Submit Answers</button>
+  </form>
 </div>
-
-<script>
-  // Timer Logic
-  let timeLeft = <%= @test.duration_minutes * 60 %>;
-  const timer = document.getElementById('timer');
-
-  function updateTimer() {
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-    timer.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      document.getElementById('test-form').submit();
-    }
-    timeLeft--;
-  }
-
-  const timerInterval = setInterval(updateTimer, 1000);
-  updateTimer();
-
-  // Fullscreen Enforcement
-  function checkFullscreen() {
-    if (!document.fullscreenElement) {
-      document.getElementById('fullscreen-message').classList.remove('d-none');
-    } else {
-      document.getElementById('fullscreen-message').classList.add('d-none');
-    }
-  }
-
-  document.addEventListener('fullscreenchange', checkFullscreen);
-
-  // Request fullscreen on load
-  window.addEventListener('load', () => {
-    if (document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen();
-    }
-  });
-</script>
