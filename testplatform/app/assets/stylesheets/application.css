@@ -99,13 +99,13 @@ button:hover, .btn-primary:hover, .btn-success:hover {
 }
 
 .question:hover {
-  background-color: #f3f4f6;
+  background-color: whitesmoke;
 }
 
 .question p {
   font-size: 1.1rem;
   font-weight: 600;
-  color: darkred;
+  color: black;
   margin-bottom: 10px;
 }
 

@@ -17,7 +17,7 @@
 
     <% @questions.each_with_index do |q, i| %>
       <div class="question">
-        <p>Q<%= i + 1 %>. <%= q['content'] %></p>
+        <p>Q<%= i + 1 %>. <%= q['question'] %></p>
         <div class="options">
           <% ['A', 'B', 'C', 'D'].each do |opt| %>
             <label>

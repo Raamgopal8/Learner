@@ -4,8 +4,7 @@ puts "Seeding database..."
 
 # -------- Users --------
 users = [
-  { name: 'Alice Johnson', email: 'alice@example.com' },
-  { name: 'Bob Smith', email: 'bob@example.com' }
+  { name: 'Alice Johnson', email: 'alice@example.com' }
 ]
 
 users.each do |u|
