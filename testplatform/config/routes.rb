@@ -4,4 +4,6 @@ Rails.application.routes.draw do
   get '/tests/:id', to: 'tests#show'
   post '/attempts', to: 'attempts#create'
   get '/results', to: 'results#index'
+  post '/recommend_reward', to: 'bandit_integration#reward'
+
 end

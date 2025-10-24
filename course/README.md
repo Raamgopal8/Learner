@@ -22,3 +22,4 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+psql -h localhost -p 5432 -U postgres -d testplatform

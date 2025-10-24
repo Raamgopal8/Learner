@@ -6,7 +6,8 @@ class CoursesController < ApplicationController
     # Apply filters if provided
     @courses = @courses.by_category(params[:category]) if params[:category].present?
     @courses = @courses.by_level(params[:level]) if params[:level].present?
-
+    @enrolled = current_user.enrollments.where(course: @course).exists? if current_user
+    
     # Apply sorting
     case params[:sort]
     when 'price_low'

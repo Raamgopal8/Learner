@@ -9,8 +9,7 @@ users = [
 
 users.each do |u|
   DB.exec_params(
-    "INSERT INTO users (name, email) VALUES ($1, $2)
-     ON CONFLICT (email) DO NOTHING;",
+    "INSERT INTO users (name, email) VALUES ($1, $2)",
     [u[:name], u[:email]]
   )
 end
@@ -19,8 +18,7 @@ puts "Users seeded."
 # -------- Single Combined Test --------
 DB.exec_params(
   "INSERT INTO tests (title, description, duration_in_minutes)
-   VALUES ($1, $2, $3)
-   ON CONFLICT (title) DO NOTHING;",
+   VALUES ($1, $2, $3);",
   ['Master Test', 'All questions combined into a single test', 60]
 )
 

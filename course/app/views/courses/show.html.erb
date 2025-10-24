@@ -229,11 +229,24 @@
     </div>
   </div>
 
-  <!-- Back Button -->
+ <!-- Enrollment Section -->
+ <div style="margin-top: 40px; text-align: center;">
+  <% if current_user %>
+    <% if @enrolled %>
+      <p style="color: #27ae60; font-size: 1.2rem; margin-bottom: 20px;">You are enrolled in this course.</p>
+    <% else %>
+      <%= button_to 'Enroll Now', enroll_course_path(@course), method: :post,
+            style: "display: inline-block; padding: 12px 30px; background: #e74c3c; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: background 0.3s ease;" %>
+    <% end %>
+  <% end %>
+ </div>
+
+<!-- Back Button -->
   <div style="margin-top: 40px; text-align: center;">
     <%= link_to '← Back to Courses', courses_path,
           style: "display: inline-block; padding: 12px 30px; background: #3498db; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: background 0.3s ease;" %>
   </div>
+  
 
 </div>
 

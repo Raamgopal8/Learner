@@ -2,6 +2,7 @@
   <h2 class="text-xl font-semibold mb-4">Manage Users</h2>
 
   <form action="/users" method="post" class="flex gap-3 mb-6">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
     <input type="text" name="name" placeholder="Name" class="input-field" />
     <input type="email" name="email" placeholder="Email" class="input-field" />
     <input type="submit" value="Add User" class="btn-primary" />

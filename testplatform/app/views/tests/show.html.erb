@@ -12,6 +12,7 @@
   </div>
 
   <form id="test-form" action="/attempts" method="post">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
     <input type="hidden" name="user_id" value="1">
     <input type="hidden" name="test_id" value="<%= @test['id'] %>">
 

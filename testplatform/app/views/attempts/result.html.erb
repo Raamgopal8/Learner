@@ -1,0 +1,17 @@
+<h2>Your Score: <%= @score %> / <%= @total %></h2>
+
+<h3>Recommended courses for you</h3>
+<% @recommendations.each do |r| %>
+  <% course = DB.exec_params("SELECT * FROM courses WHERE id=$1 LIMIT 1", [r["course_id"]]).first %>
+  <div class="card">
+    <h4><%= course['title'] %></h4>
+    <p><%= course['description'] %></p>
+    <form action="/recommend_reward" method="post" style="display:inline">
+      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+      <input type="hidden" name="user_id" value="1">
+      <input type="hidden" name="course_id" value="<%= course['id'] %>">
+      <input type="hidden" name="context" value="<%= JSON.generate(context: 'from_result_page') %>">
+      <input type="submit" value="Show Interest (gives reward)" class="btn-primary">
+    </form>
+  </div>
+<% end %>
