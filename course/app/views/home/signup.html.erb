@@ -1,168 +1,97 @@
-<div class="signup-section">
-  <div class="signup-container">
-    <!-- Left Side - Branding -->
-    <div class="signup-branding">
-      <div class="brand-logo">
-        <i class="fas fa-graduation-cap"></i>
-        <span>Tutorx</span>
-      </div>
-      <h2 class="brand-title">Join Tutorx Today</h2>
-      <p class="brand-subtitle">
-        Start your learning journey with access to thousands of courses, expert instructors, and a supportive community.
-      </p>
-      <div class="brand-benefits">
-        <div class="brand-benefit">
-          <i class="fas fa-check-circle"></i>
-          <span>Access to premium courses</span>
-        </div>
-        <div class="brand-benefit">
-          <i class="fas fa-certificate"></i>
-          <span>Earn certificates & badges</span>
-        </div>
-        <div class="brand-benefit">
-          <i class="fas fa-users"></i>
-          <span>Join a community of learners</span>
-        </div>
-        <div class="brand-benefit">
-          <i class="fas fa-mobile-alt"></i>
-          <span>Learn anywhere, anytime</span>
-        </div>
-      </div>
+<%= form_for(resource, as: resource_name, 
+     url: registration_path(resource_name), 
+     html: { class: "signup-form", id: "signup-form" }) do |f| %>
+  
+  <!-- First Name and Last Name -->
+  <div class="form-row">
+    <div class="form-group">
+      <%= f.label :first_name, "First Name", class: "form-label" %>
+      <%= f.text_field :first_name, class: "form-input", placeholder: "Enter your first name", required: true %>
     </div>
-
-    <!-- Right Side - Signup Form -->
-    <div class="signup-form-container">
-      <div class="signup-form-card">
-        <div class="signup-header">
-          <h1>Create Account</h1>
-          <p>Fill in your details to get started</p>
-          <% if params[:signup] == 'success' %>
-            <div class="signup-alert">
-              <i class="fas fa-check-circle"></i>
-              <span>Account created successfully! Please sign in to continue.</span>
-            </div>
-          <% end %>
-        </div>
-
-        <%= form_with url: '/signup', method: :post, class: "signup-form", id: "signup-form" do |f| %>
-          <div class="form-row">
-            <div class="form-group">
-              <%= f.label :first_name, "First Name", class: "form-label" %>
-              <%= f.text_field :first_name, class: "form-input", placeholder: "Enter your first name", required: true %>
-            </div>
-            <div class="form-group">
-              <%= f.label :last_name, "Last Name", class: "form-label" %>
-              <%= f.text_field :last_name, class: "form-input", placeholder: "Enter your last name", required: true %>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <%= f.label :email, "Email Address", class: "form-label" %>
-            <%= f.email_field :email, class: "form-input", placeholder: "Enter your email address", required: true %>
-          </div>
-
-          <div class="form-group">
-            <%= f.label :password, "Password", class: "form-label" %>
-            <%= f.password_field :password, class: "form-input", placeholder: "Create a strong password", required: true %>
-            <div class="password-strength">
-              <div class="strength-meter">
-                <div class="strength-bar" id="strength-bar"></div>
-              </div>
-              <span class="strength-text" id="strength-text">Password strength</span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <%= f.label :password_confirmation, "Confirm Password", class: "form-label" %>
-            <%= f.password_field :password_confirmation, class: "form-input", placeholder: "Confirm your password", required: true %>
-          </div>
-
-          <div class="form-group">
-            <%= f.label :date_of_birth, "Date of Birth", class: "form-label" %>
-            <%= f.date_field :date_of_birth, class: "form-input", required: true %>
-          </div>
-
-          <div class="form-group checkbox-group">
-            <label class="checkbox-container">
-              <%= f.check_box :terms, class: "checkbox-input", required: true %>
-              <span class="checkbox-label">
-                I agree to the <%= link_to "Terms of Service", "#", class: "terms-link" %> and <%= link_to "Privacy Policy", "#", class: "terms-link" %>
-              </span>
-            </label>
-          </div>
-
-          <div class="form-group checkbox-group">
-            <label class="checkbox-container">
-              <%= f.check_box :newsletter, class: "checkbox-input" %>
-              <span class="checkbox-label">
-                Send me updates about new courses and features
-              </span>
-            </label>
-          </div>
-
-          <%= f.submit "Create Account", class: "signup-submit-btn" %>
-
-          <div class="divider">
-            <span>or sign up with</span>
-          </div>
-
-          <div class="social-signup">
-            <button type="button" class="social-btn google-btn">
-              <i class="fab fa-google"></i>
-              <span>Google</span>
-            </button>
-            <button type="button" class="social-btn github-btn">
-              <i class="fab fa-github"></i>
-              <span>GitHub</span>
-            </button>
-            <button type="button" class="social-btn facebook-btn">
-              <i class="fab fa-facebook-f"></i>
-              <span>Facebook</span>
-            </button>
-          </div>
-        <% end %>
-
-        <div class="signup-footer">
-          <p>Already have an account? <%= link_to "Sign in", login_path, class: "signin-link" %></p>
-        </div>
-      </div>
+    <div class="form-group">
+      <%= f.label :last_name, "Last Name", class: "form-label" %>
+      <%= f.text_field :last_name, class: "form-input", placeholder: "Enter your last name", required: true %>
     </div>
   </div>
+
+  <!-- Username -->
+  <div class="form-group">
+    <%= f.label :username, "Username", class: "form-label" %>
+    <%= f.text_field :username, class: "form-input", placeholder: "Choose a username", required: true %>
+  </div>
+
+  <!-- Email -->
+  <div class="form-group">
+    <%= f.label :email, "Email Address", class: "form-label" %>
+    <%= f.email_field :email, class: "form-input", placeholder: "Enter your email address", required: true, autocomplete: "email" %>
+  </div>
+
+  <!-- Password -->
+  <div class="form-group">
+    <%= f.label :password, "Password", class: "form-label" %>
+    <%= f.password_field :password, class: "form-input", placeholder: "Create a strong password", required: true, autocomplete: "new-password" %>
+    <div class="password-strength">
+      <div class="strength-meter">
+        <div class="strength-bar" id="strength-bar"></div>
+      </div>
+      <span class="strength-text" id="strength-text">Password strength</span>
+    </div>
+  </div>
+
+  <!-- Password Confirmation -->
+  <div class="form-group">
+    <%= f.label :password_confirmation, "Confirm Password", class: "form-label" %>
+    <%= f.password_field :password_confirmation, class: "form-input", placeholder: "Confirm your password", required: true, autocomplete: "new-password" %>
+  </div>
+
+  <!-- Date of Birth -->
+  <div class="form-group">
+    <%= f.label :date_of_birth, "Date of Birth", class: "form-label" %>
+    <%= f.date_field :date_of_birth, class: "form-input", required: true, max: Date.today - 13.years, min: Date.today - 100.years %>
+  </div>
+
+  <!-- Terms and Conditions -->
+  <div class="form-group checkbox-group">
+    <label class="checkbox-container">
+      <%= f.check_box :terms, class: "checkbox-input", required: true %>
+      <span class="checkbox-label">
+        I agree to the <%= link_to "Terms of Service", terms_path, class: "terms-link" %> and 
+        <%= link_to "Privacy Policy", privacy_path, class: "terms-link" %>
+      </span>
+    </label>
+  </div>
+
+  <!-- Newsletter Subscription -->
+  <div class="form-group checkbox-group">
+    <label class="checkbox-container">
+      <%= f.check_box :receive_newsletter, class: "checkbox-input" %>
+      <span class="checkbox-label">
+        Send me updates about new courses and features
+      </span>
+    </label>
+  </div>
+
+  <!-- Submit Button -->
+  <%= f.submit "Create Account", class: "signup-submit-btn" %>
+
+  <!-- Social Sign Up -->
+  <div class="divider">
+    <span>or sign up with</span>
+  </div>
+
+  <div class="social-signup">
+    <%= link_to user_google_oauth2_omniauth_authorize_path, method: :post, class: "social-btn google-btn" do %>
+      <i class="fab fa-google"></i>
+      <span>Google</span>
+    <% end %>
+    <%= link_to user_github_omniauth_authorize_path, method: :post, class: "social-btn github-btn" do %>
+      <i class="fab fa-github"></i>
+      <span>GitHub</span>
+    <% end %>
+  </div>
+<% end %>
+
+<!-- Already have an account? -->
+<div class="signup-footer">
+  <p>Already have an account? <%= link_to "Sign in", new_user_session_path, class: "signin-link" %></p>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const passwordInput = document.querySelector('input[type="password"]');
-  const strengthBar = document.getElementById('strength-bar');
-  const strengthText = document.getElementById('strength-text');
-
-  passwordInput.addEventListener('input', function() {
-    const password = this.value;
-    let strength = 0;
-    let feedback = '';
-
-    if (password.length >= 8) strength += 25;
-    if (password.match(/[a-z]/)) strength += 25;
-    if (password.match(/[A-Z]/)) strength += 25;
-    if (password.match(/[0-9]/)) strength += 25;
-
-    strengthBar.style.width = strength + '%';
-
-    if (strength <= 25) {
-      strengthBar.style.backgroundColor = '#ef4444';
-      feedback = 'Weak';
-    } else if (strength <= 50) {
-      strengthBar.style.backgroundColor = '#f59e0b';
-      feedback = 'Fair';
-    } else if (strength <= 75) {
-      strengthBar.style.backgroundColor = '#3b82f6';
-      feedback = 'Good';
-    } else {
-      strengthBar.style.backgroundColor = '#10b981';
-      feedback = 'Strong';
-    }
-
-    strengthText.textContent = feedback;
-  });
-});
-</script>

@@ -13,11 +13,36 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-96x96.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- AOS Animation Library -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-  <%= stylesheet_link_tag 'courses', media: 'all' %>
-  <%= stylesheet_link_tag 'tests', media: 'all' %>
-  <%= javascript_importmap_tags %>
+  <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+  
+  <!-- Custom CSS Variables -->
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #10b981;
+      --dark: #0f172a;
+      --light: #f8fafc;
+      --gray: #64748b;
+      --gray-light: #e2e8f0;
+      --gradient: linear-gradient(135deg, var(--primary), #8b5cf6);
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  </style>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -83,5 +108,150 @@
       <p>&copy; <%= Time.current.year %> Tutorx. All rights reserved.</p>
     </div>
   </footer>
+  <!-- Floating Login Button -->
+  <button id="floatingLoginBtn" class="fixed right-6 bottom-6 bg-indigo-600 hover:bg-indigo-700 text-white p-4 rounded-full shadow-lg transform transition-all duration-300 opacity-0 translate-y-4 z-50">
+    <i class="fas fa-sign-in-alt text-xl"></i>
+  </button>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 relative">
+      <button id="closeModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+        <i class="fas fa-times text-2xl"></i>
+      </button>
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Welcome Back!</h2>
+      <%= form_with(url: login_path, local: true, class: "space-y-4") do |f| %>
+        <div>
+          <%= f.label :email, class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= f.email_field :email, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500", placeholder: "Enter your email" %>
+        </div>
+        <div>
+          <%= f.label :password, class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= f.password_field :password, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500", placeholder: "Enter your password" %>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <%= f.check_box :remember_me, class: "h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" %>
+            <label for="user_remember_me" class="ml-2 block text-sm text-gray-700">
+              Remember me
+            </label>
+          </div>
+          <a href="#" class="text-sm text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+        </div>
+        <div class="pt-2">
+          <%= f.submit "Sign in", class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer" %>
+        </div>
+      <% end %>
+      <div class="mt-4 text-center text-sm">
+        <span class="text-gray-600">Don't have an account?</span>
+        <%= link_to "Sign up", signup_path, class: "font-medium text-indigo-600 hover:text-indigo-500 ml-1" %>
+      </div>
+    </div>
+  </div>
+  <% flash.each do |type, msg| %>
+  <div class="flash-message <%= type %>">
+    <%= msg %>
+  </div>
+  <% end %>
+  
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true
+    });
+
+    // Login Modal Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const floatingBtn = document.getElementById('floatingLoginBtn');
+      const loginModal = document.getElementById('loginModal');
+      const closeModal = document.getElementById('closeModal');
+      
+      // Show floating button on scroll
+      let lastScrollTop = 0;
+      const sections = document.querySelectorAll('section');
+      let sectionInView = false;
+      let scrollTimeout;
+
+      // Track if login modal has been shown in this session
+      let loginModalShown = sessionStorage.getItem('loginModalShown') === 'true';
+      
+      // Show/hide floating button based on scroll
+      function handleScroll() {
+        const st = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollPercentage = (st / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+        
+        // Show button when scrolling down, hide when scrolling up
+        if (st > lastScrollTop && st > 300) {
+          floatingBtn.classList.remove('opacity-0', 'translate-y-4');
+          floatingBtn.classList.add('opacity-100', 'translate-y-0');
+          
+          // Auto-show login modal when scrolled 60% of the page and not shown in this session
+          if (scrollPercentage > 60 && !loginModalShown) {
+            loginModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            loginModalShown = true;
+            sessionStorage.setItem('loginModalShown', 'true');
+          }
+        } else if (st <= 0) {
+          floatingBtn.classList.remove('opacity-100', 'translate-y-0');
+          floatingBtn.classList.add('opacity-0', 'translate-y-4');
+        }
+        
+        lastScrollTop = st <= 0 ? 0 : st;
+
+        // Check if any section is in view
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          checkSectionInView();
+        }, 100);
+      }
+
+      // Check if any section is in viewport
+      function checkSectionInView() {
+        sectionInView = false;
+        sections.forEach(section => {
+          const rect = section.getBoundingClientRect();
+          // Check if section is in viewport
+          if (rect.top <= window.innerHeight * 0.3 && rect.bottom >= window.innerHeight * 0.3) {
+            sectionInView = true;
+          }
+        });
+
+        // Show floating button when a section is in view
+        if (sectionInView && window.scrollY > 300) {
+          floatingBtn.classList.remove('opacity-0', 'translate-y-4');
+          floatingBtn.classList.add('opacity-100', 'translate-y-0');
+        }
+      }
+
+      // Toggle modal
+      floatingBtn.addEventListener('click', () => {
+        loginModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      });
+
+      closeModal.addEventListener('click', () => {
+        loginModal.classList.add('hidden');
+        document.body.style.overflow = '';
+      });
+
+      // Close modal when clicking outside
+      loginModal.addEventListener('click', (e) => {
+        if (e.target === loginModal) {
+          loginModal.classList.add('hidden');
+          document.body.style.overflow = '';
+        }
+      });
+
+      // Initialize scroll event
+      window.addEventListener('scroll', handleScroll);
+      
+      // Initial check
+      handleScroll();
+    });
+  </script>
 </body>
 </html>
