@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_04_154957) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_15_070111) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -57,9 +57,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_154957) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "image_url"
+    t.jsonb "syllabus", default: {}
+    t.text "content"
+    t.text "learning_outcomes", default: [], array: true
     t.index ["category"], name: "index_courses_on_category"
+    t.index ["created_at"], name: "index_courses_on_created_at"
     t.index ["featured"], name: "index_courses_on_featured"
     t.index ["level"], name: "index_courses_on_level"
+    t.index ["title"], name: "index_courses_on_title"
+    t.index ["updated_at"], name: "index_courses_on_updated_at"
   end
 
   create_table "enrollments", force: :cascade do |t|
@@ -69,6 +75,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_154957) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["course_id"], name: "index_enrollments_on_course_id"
+    t.index ["created_at"], name: "index_enrollments_on_created_at"
+    t.index ["user_id", "course_id"], name: "index_enrollments_on_user_id_and_course_id", unique: true
     t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
 
@@ -83,8 +91,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_04_154957) do
     t.string "first_name"
     t.string "last_name"
     t.string "username"
+    t.string "firebase_uid"
+    t.string "provider"
+    t.index ["created_at"], name: "index_users_on_created_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["firebase_uid", "provider"], name: "index_users_on_firebase_uid_and_provider", unique: true
+    t.index ["firebase_uid"], name: "index_users_on_firebase_uid", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["updated_at"], name: "index_users_on_updated_at"
     t.index ["username"], name: "index_users_on_username"
   end
 

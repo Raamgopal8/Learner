@@ -4,8 +4,8 @@
   <ul>
     <% (@tests || []).each do |test| %>
       <li class="border-b border-gray-200 py-2">
-        <a href="/tests/<%= test['id'] %>" class="text-indigo-600 hover:underline">
-          <%= test['title'] %>
+        <a href="/tests/<%= test.id %>" class="text-indigo-600 hover:underline">
+          <%= test.title %>
         </a>
       </li>
     <% end %>

@@ -23,3 +23,6 @@ Things you may want to cover:
 
 * ...
 psql -h localhost -p 5432 -U postgres -d testplatform
+
+clear cache 
+rails assets:clobber

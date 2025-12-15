@@ -1,17 +1,113 @@
-<h2>Your Score: <%= @score %> / <%= @total %></h2>
-
-<h3>Recommended courses for you</h3>
-<% @recommendations.each do |r| %>
-  <% course = DB.exec_params("SELECT * FROM courses WHERE id=$1 LIMIT 1", [r["course_id"]]).first %>
-  <div class="card">
-    <h4><%= course['title'] %></h4>
-    <p><%= course['description'] %></p>
-    <form action="/recommend_reward" method="post" style="display:inline">
-      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-      <input type="hidden" name="user_id" value="1">
-      <input type="hidden" name="course_id" value="<%= course['id'] %>">
-      <input type="hidden" name="context" value="<%= JSON.generate(context: 'from_result_page') %>">
-      <input type="submit" value="Show Interest (gives reward)" class="btn-primary">
-    </form>
+<div class="test-results" style="max-width: 900px; margin: 40px auto; font-family: 'Segoe UI', sans-serif; padding: 20px;">
+  
+  <!-- Score Card -->
+  <div class="score-card" style="background: <%= @percentage >= 70 ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : @percentage >= 50 ? 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' : 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' %>; border-radius: 20px; padding: 40px; text-align: center; color: white; box-shadow: 0 10px 40px rgba(0,0,0,0.2); margin-bottom: 40px;">
+    <h1 style="margin: 0 0 10px 0; font-size: 2.5rem;">Test Completed!</h1>
+    <p style="margin: 0 0 30px 0; opacity: 0.9; font-size: 1.1rem;">Here are your results</p>
+    
+    <div style="background: rgba(255,255,255,0.2); border-radius: 15px; padding: 30px; backdrop-filter: blur(10px);">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
+        <div>
+          <div style="font-size: 3rem; font-weight: bold; margin-bottom: 5px;"><%= @score %>/<%= @total %></div>
+          <div style="opacity: 0.9;">Score</div>
+        </div>
+        <div>
+          <div style="font-size: 3rem; font-weight: bold; margin-bottom: 5px;"><%= @percentage %>%</div>
+          <div style="opacity: 0.9;">Percentage</div>
+        </div>
+        <div>
+          <div style="font-size: 3rem; font-weight: bold; margin-bottom: 5px;"><%= @grade %></div>
+          <div style="opacity: 0.9;">Grade</div>
+        </div>
+      </div>
+    </div>
+    
+    <div style="margin-top: 30px;">
+      <% if @percentage >= 90 %>
+        <p style="font-size: 1.3rem; margin: 0;">🎉 Outstanding Performance!</p>
+      <% elsif @percentage >= 70 %>
+        <p style="font-size: 1.3rem; margin: 0;">✨ Great Job!</p>
+      <% elsif @percentage >= 50 %>
+        <p style="font-size: 1.3rem; margin: 0;">👍 Good Effort!</p>
+      <% else %>
+        <p style="font-size: 1.3rem; margin: 0;">💪 Keep Practicing!</p>
+      <% end %>
+    </div>
   </div>
-<% end %>
+
+  <!-- Recommended Courses Section -->
+  <% if @recommended_courses.any? %>
+    <div class="recommendations" style="background: white; border-radius: 20px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+      <h2 style="color: #2c3e50; margin: 0 0 10px 0; font-size: 2rem;">📚 Recommended Courses for You</h2>
+      <p style="color: #7f8c8d; margin: 0 0 30px 0;">Based on your performance, we suggest these courses to enhance your skills:</p>
+      
+      <div style="display: grid; gap: 20px;">
+        <% @recommended_courses.each_with_index do |course, index| %>
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; padding: 25px; color: white; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); transition: transform 0.3s ease;">
+            <div style="display: flex; align-items: center; gap: 20px;">
+              <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; flex-shrink: 0;">
+                #<%= index + 1 %>
+              </div>
+              <div style="flex: 1;">
+                <h3 style="margin: 0 0 8px 0; font-size: 1.4rem;"><%= course[:title] %></h3>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; opacity: 0.95;">
+                  <% if course[:domain].present? %>
+                    <span style="background: rgba(255,255,255,0.25); padding: 5px 12px; border-radius: 20px; font-size: 0.9rem;">
+                      🎯 <%= course[:domain] %>
+                    </span>
+                  <% end %>
+                  <% if course[:category].present? %>
+                    <span style="background: rgba(255,255,255,0.25); padding: 5px 12px; border-radius: 20px; font-size: 0.9rem;">
+                      📂 <%= course[:category] %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <a href="http://localhost:3000/courses/<%= course[:id] %>" target="_blank" style="display: inline-block; background: white; color: #667eea; padding: 12px 24px; border-radius: 25px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                  View Course →
+                </a>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #667eea;">
+        <p style="margin: 0; color: #2c3e50; line-height: 1.6;">
+          <strong>💡 Tip:</strong> These courses are personalized based on your test performance and learning patterns. 
+          Starting with the top recommendation will help you improve in areas where you can grow the most!
+        </p>
+      </div>
+    </div>
+  <% else %>
+    <div style="background: #fff3cd; border-radius: 15px; padding: 30px; text-align: center; border-left: 4px solid #ffc107;">
+      <p style="margin: 0; color: #856404; font-size: 1.1rem;">
+        📝 No course recommendations available at the moment. Keep taking tests to get personalized suggestions!
+      </p>
+    </div>
+  <% end %>
+
+  <!-- Action Buttons -->
+  <div style="margin-top: 40px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+    <%= link_to 'Back to Tests', root_path, style: "display: inline-block; padding: 15px 30px; background: #3498db; color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);" %>
+    
+    <% if @recommended_courses.any? %>
+      <a href="http://localhost:3000/courses" target="_blank" style="display: inline-block; padding: 15px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+        Browse All Courses →
+      </a>
+    <% end %>
+  </div>
+
+</div>
+
+<style>
+  .test-results a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  }
+  
+  .recommendations > div > div:hover {
+    transform: translateY(-3px);
+  }
+</style>

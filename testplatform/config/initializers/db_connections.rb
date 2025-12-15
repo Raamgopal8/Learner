@@ -2,7 +2,7 @@ require 'pg'
 
 unless defined?(DB)
 DB = PG.connect(
-  dbname: 'testplatform',
+  dbname: 'testplatform_development',
   user: 'postgres',
   password: 'password',
   host: 'localhost',

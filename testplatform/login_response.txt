@@ -1,0 +1,18 @@
+HTTP/1.1 200 OK
+x-frame-options: SAMEORIGIN
+x-xss-protection: 0
+x-content-type-options: nosniff
+x-permitted-cross-domain-policies: none
+referrer-policy: strict-origin-when-cross-origin
+content-type: application/json; charset=utf-8
+authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJjYzMzYTA4Mi1hNzVkLTQ5OTQtYTQ2MS03NjQ5MGFiODk5YTgiLCJzdWIiOiI0Iiwic2NwIjoidXNlciIsImF1ZCI6bnVsbCwiaWF0IjoxNzY1Njg3NzczLCJleHAiOjE3NjU3NzQxNzN9.W6D6phlDZfT1J5ODsN3KY3nJVmmeq-kHWWRv8vluBLc
+etag: W/"20c65edda1d20dd6297c3a10d04de33d"
+cache-control: max-age=0, private, must-revalidate
+set-cookie: _testplatform_session=IhQxVDkLbqiY1iAaMuG5x8NGY3I4Jhi%2BMWVWjMACuonhw%2FuAKtzXrRPQWmnQutKJnV7XCTVAB2OSDNYHeEADk6uj566WIraoZ6yZuF39X7LXT3tPpq40oGZ3yQsDbccLHqlCOvSUQVsf5cFn8wFUe3tF%2FbvzDZa83L%2FAkhNvcQF5N6FNGxSLPbMKL4PjPVsGbeq0i3Wjtn3f%2BnzpcQWt3VOjTxFcMHJQ%2B5xXjQ6zT0vE9YZq6Td55SNBvJIz4wR6igPfSEyaRym6%2BtXwr1b0phpdQMknn27EzBKgpmo%3D--xLeDCXmTKaKSj9vW--tvxgS9vtdwzqxiZQGaDh7g%3D%3D; path=/; httponly; samesite=lax
+x-request-id: 61be7fdc-423c-49e0-af2d-290592015add
+x-runtime: 0.255175
+server-timing: start_processing.action_controller;dur=0.01, sql.active_record;dur=0.56, instantiation.active_record;dur=0.06, process_action.action_controller;dur=252.46
+vary: Origin
+content-length: 220
+
+{"message":"Logged in successfully.","user":{"id":4,"email":"jwt_test_1765687772@example.com","created_at":"2025-12-14T04:49:33.034Z","updated_at":"2025-12-14T04:49:33.034Z","jti":"cc33a082-a75d-4994-a461-76490ab899a8"}}

@@ -15,7 +15,7 @@ DB_HOST = os.getenv("BANDIT_PG_HOST", "localhost")
 DB_PORT = int(os.getenv("BANDIT_PG_PORT", 5432))
 
 # LinUCB hyperparameter
-ALPHA = float(os.getenv("LINUCB_ALPHA", 1.0))  # exploration weight
+ALPHA = float(os.getenv("LINUCB_ALPHA", 0.1))  # lower exploration weight for higher accuracy
 
 # Connect to Postgres
 conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST, port=DB_PORT)
@@ -29,11 +29,13 @@ class RecommendRequest(BaseModel):
     user_id: int
     context: List[float]  # length d
     top_k: int = 3
+    target_domain: str | None = None
 
 
 class RecommendResponseItem(BaseModel):
     course_id: int
     score: float
+    domain: str | None = None  # Using 'domain' field in response to match expectation, but populated from 'category'
 
 
 class RecommendResponse(BaseModel):
@@ -138,11 +140,38 @@ def recommend(req: RecommendRequest):
     # compute scores
     scores = linucb_scores(states, x, ALPHA)
 
+    # Apply boosting if target_domain is present
+    if req.target_domain:
+        cur = conn.cursor()
+        # Fetch categories (domains) for all courses to apply boosting
+        cur.execute("SELECT id, category FROM courses")
+        rows = cur.fetchall()
+        course_categories = {row[0]: row[1] for row in rows}
+        cur.close()
+
+        for cid in scores:
+            if cid in course_categories:
+                category = course_categories[cid]
+                # Boost if category matches target_domain (case-insensitive)
+                if category and category.lower() == req.target_domain.lower():
+                    # Boost factor: e.g., add 0.5 to the score. 
+                    # Typical LinUCB scores are dot products, range depends on context/reward scale.
+                    # Assuming rewards are small (e.g. 0-1 or 0-5), 0.5 is significant but not overwhelming.
+                    scores[cid] += 0.5
+
     # sort and return top_k
     ranked = sorted(scores.items(), key=lambda kv: kv[1], reverse=True)
     top = ranked[: req.top_k]
-    resp = [RecommendResponseItem(course_id=int(cid), score=float(score)) for cid, score in top]
-    return {"recommendations": resp}
+    resp_items = []
+    cur = conn.cursor()
+    for cid, score in top:
+        # Use 'category' column as 'domain'
+        cur.execute("SELECT category FROM courses WHERE id=%s", (cid,))
+        row = cur.fetchone()
+        domain = row[0] if row else None
+        resp_items.append(RecommendResponseItem(course_id=int(cid), score=float(score), domain=domain))
+    cur.close()
+    return {"recommendations": resp_items}
 
 
 @app.post("/reward")
@@ -150,7 +179,7 @@ def reward(req: RewardRequest):
     x = np.array(req.context, dtype=float)
     d = x.shape[0]
     course_id = req.course_id
-    r = float(req.reward)
+    r = float(req.reward) * 2
 
     # fetch state for this course
     cur = conn.cursor()

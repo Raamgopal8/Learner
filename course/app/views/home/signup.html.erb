@@ -1,6 +1,4 @@
-<%= form_for(resource, as: resource_name, 
-     url: registration_path(resource_name), 
-     html: { class: "signup-form", id: "signup-form" }) do |f| %>
+<%= form_with url: user_registration_path, method: :post, class: "signup-form", id: "signup-form" do |f| %>
   
   <!-- First Name and Last Name -->
   <div class="form-row">
@@ -80,18 +78,256 @@
   </div>
 
   <div class="social-signup">
-    <%= link_to user_google_oauth2_omniauth_authorize_path, method: :post, class: "social-btn google-btn" do %>
+    <button type="button" class="social-btn google-btn" onclick="signUpWithGoogle()">
       <i class="fab fa-google"></i>
       <span>Google</span>
-    <% end %>
-    <%= link_to user_github_omniauth_authorize_path, method: :post, class: "social-btn github-btn" do %>
-      <i class="fab fa-github"></i>
-      <span>GitHub</span>
-    <% end %>
+    </button>
+    <button type="button" class="social-btn email-btn" onclick="signUpWithEmail()">
+      <i class="fas fa-envelope"></i>
+      <span>Email</span>
+    </button>
   </div>
+
+  <!-- Firebase Email Sign Up Modal -->
+  <div id="email-signup-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Sign up with Email</h3>
+        <button type="button" class="close-btn" onclick="closeEmailSignupModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="firebase-email-signup-form">
+          <div class="form-group">
+            <label for="firebase-signup-email" class="form-label">Email Address</label>
+            <input type="email" id="firebase-signup-email" class="form-input" placeholder="Enter your email" required>
+          </div>
+          <div class="form-group">
+            <label for="firebase-signup-password" class="form-label">Password</label>
+            <input type="password" id="firebase-signup-password" class="form-input" placeholder="Create a password (min 6 characters)" required minlength="6">
+          </div>
+          <div class="form-group">
+            <label for="firebase-signup-password-confirm" class="form-label">Confirm Password</label>
+            <input type="password" id="firebase-signup-password-confirm" class="form-input" placeholder="Confirm your password" required minlength="6">
+          </div>
+          <button type="submit" class="signup-submit-btn">Create Account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Messages -->
+  <div id="signup-auth-status" class="auth-status" style="display: none;"></div>
 <% end %>
 
 <!-- Already have an account? -->
 <div class="signup-footer">
-  <p>Already have an account? <%= link_to "Sign in", new_user_session_path, class: "signin-link" %></p>
+  <p>Already have an account? <%= link_to "Sign in", login_path, class: "signin-link" %></p>
 </div>
+
+<!-- Firebase Authentication JavaScript -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+<script>
+  // Firebase Configuration - Replace with your config
+  const firebaseConfig = {
+    apiKey: "your-api-key-here",
+    authDomain: "your-project-id.firebaseapp.com",
+    projectId: "your-project-id",
+    storageBucket: "your-project-id.appspot.com",
+    messagingSenderId: "your-sender-id",
+    appId: "your-app-id-here"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  // Show status message
+  function showSignupStatus(message, type = 'info') {
+    const statusDiv = document.getElementById('signup-auth-status');
+    statusDiv.className = `auth-status auth-status-${type}`;
+    statusDiv.textContent = message;
+    statusDiv.style.display = 'block';
+    
+    setTimeout(() => {
+      statusDiv.style.display = 'none';
+    }, 5000);
+  }
+
+  // Google Sign Up
+  function signUpWithGoogle() {
+    showSignupStatus('Creating account with Google...', 'info');
+    
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider)
+      .then(result => {
+        return result.user.getIdToken();
+      })
+      .then(idToken => {
+        return fetch('/firebase/auth', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+          },
+          body: JSON.stringify({ id_token: idToken })
+        });
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.firebase_configured) {
+          showSignupStatus('Account created successfully! Redirecting...', 'success');
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 1500);
+        } else {
+          showSignupStatus('Firebase not configured. Please contact administrator.', 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Google sign-up error:', error);
+        showSignupStatus(error.message || 'Google sign-up failed', 'error');
+      });
+  }
+
+  // Email Sign Up Modal
+  function signUpWithEmail() {
+    document.getElementById('email-signup-modal').style.display = 'flex';
+  }
+
+  function closeEmailSignupModal() {
+    document.getElementById('email-signup-modal').style.display = 'none';
+  }
+
+  // Email Sign Up Form
+  document.getElementById('firebase-email-signup-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('firebase-signup-email').value;
+    const password = document.getElementById('firebase-signup-password').value;
+    const passwordConfirm = document.getElementById('firebase-signup-password-confirm').value;
+
+    if (password !== passwordConfirm) {
+      showSignupStatus('Passwords do not match', 'error');
+      return;
+    }
+
+    showSignupStatus('Creating account...', 'info');
+
+    auth.createUserWithEmailAndPassword(email, password)
+      .then(result => {
+        return result.user.getIdToken();
+      })
+      .then(idToken => {
+        return fetch('/firebase/auth', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+          },
+          body: JSON.stringify({ id_token: idToken })
+        });
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.firebase_configured) {
+          showSignupStatus('Account created successfully! Redirecting...', 'success');
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 1500);
+        } else {
+          showSignupStatus('Firebase not configured. Please contact administrator.', 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Email sign-up error:', error);
+        showSignupStatus(error.message || 'Email sign-up failed', 'error');
+      });
+  });
+
+  // Close modal when clicking outside
+  window.onclick = function(event) {
+    const modal = document.getElementById('email-signup-modal');
+    if (event.target == modal) {
+      closeEmailSignupModal();
+    }
+  }
+</script>
+
+<style>
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-header h3 {
+    margin: 0;
+    color: #333;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+  }
+
+  .auth-status {
+    padding: 0.75rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  .auth-status-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  .auth-status-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+
+  .auth-status-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+  }
+
+  .email-btn {
+    background-color: #dc3545 !important;
+    color: white !important;
+  }
+
+  .email-btn:hover {
+    background-color: #c82333 !important;
+  }
+</style>

@@ -3,8 +3,10 @@ require 'uri'
 require 'json'
 
 class AttemptsController < ApplicationController
+  before_action :authenticate_user! # Protect this controller
+
   def create
-    user_id = params[:user_id].to_i
+    user_id = current_user.id # Securely get user ID
     test_id = params[:test_id].to_i
     answers = params[:answers] || {}
 
@@ -33,19 +35,61 @@ class AttemptsController < ApplicationController
       engagement_score(user_id)         # placeholder
     ].map(&:to_f)
 
-    # call bandit service
+    # Fetch test category to use as target domain for boosting
+    test_info = DB.exec_params("SELECT category FROM tests WHERE id=$1", [test_id]).first
+    target_domain = test_info ? test_info['category'] : nil
+
+    # call bandit service for recommendations
     uri = URI("http://localhost:8000/recommend")
     http = Net::HTTP.new(uri.host, uri.port)
-    req = Net::HTTP::Post.new(uri.path, {'Content-Type' =>'application/json'})
-    req.body = { user_id: user_id, context: context, top_k: 3 }.to_json
+    req = Net::HTTP::Post.new(uri.path, {'Content-Type' => 'application/json'})
+    req.body = { 
+      user_id: user_id, 
+      context: context, 
+      top_k: 3,
+      target_domain: target_domain
+    }.to_json
     resp = http.request(req)
-    recs = JSON.parse(resp.body)['recommendations'] rescue []
-
-    # render results page with @score and @recs
+    recommendations = JSON.parse(resp.body)['recommendations'] rescue []
+    
+    # Fetch course details for recommendations
+    @recommended_courses = []
+    recommendations.each do |rec|
+      course_id = rec['course_id']
+      # Fixed: 'domain' column does not exist, use 'category' instead
+      course_row = DB.exec_params("SELECT id, title, category FROM courses WHERE id=$1", [course_id]).first
+      if course_row
+        @recommended_courses << {
+          id: course_row['id'],
+          title: course_row['title'],
+          domain: course_row['category'], # Map category to domain for view compatibility
+          category: course_row['category'],
+          score: rec['score']
+        }
+      end
+    end
+    
+    # Calculate performance metrics
     @score = score
     @total = total
-    @recommendations = recs # array of {course_id, score}
+    @percentage = ((score.to_f / total) * 100).round(2)
+    @grade = calculate_grade(@percentage)
+    @test_id = test_id
+    
+    # Render results page
     render 'result'
+  end
+  
+  def calculate_grade(percentage)
+    case percentage
+    when 90..100 then 'A+'
+    when 80...90 then 'A'
+    when 70...80 then 'B+'
+    when 60...70 then 'B'
+    when 50...60 then 'C'
+    when 40...50 then 'D'
+    else 'F'
+    end
   end
 
   # Helper examples - implement your real computations

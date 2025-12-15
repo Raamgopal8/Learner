@@ -34,7 +34,7 @@
           <p>Enter your credentials to access your account</p>
         </div>
 
-        <%= form_with url: '/login', method: :post, class: "login-form" do |f| %>
+        <%= form_with url: user_session_path, method: :post, class: "login-form" do |f| %>
           <div class="form-group">
             <%= f.label :email, "Email Address", class: "form-label" %>
             <%= f.email_field :email, class: "form-input", placeholder: "Enter your email", required: true %>
@@ -60,19 +60,41 @@
           </div>
 
           <div class="social-login">
-            <button type="button" class="social-btn google-btn">
+            <button type="button" class="social-btn google-btn" onclick="signInWithGoogle()">
               <i class="fab fa-google"></i>
               <span>Google</span>
             </button>
-            <button type="button" class="social-btn github-btn">
-              <i class="fab fa-github"></i>
-              <span>GitHub</span>
-            </button>
-            <button type="button" class="social-btn facebook-btn">
-              <i class="fab fa-facebook-f"></i>
-              <span>Facebook</span>
+            <button type="button" class="social-btn email-btn" onclick="signInWithEmail()">
+              <i class="fas fa-envelope"></i>
+              <span>Email</span>
             </button>
           </div>
+
+          <!-- Firebase Email Sign In Modal -->
+          <div id="email-signin-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3>Sign in with Email</h3>
+                <button type="button" class="close-btn" onclick="closeEmailModal()">&times;</button>
+              </div>
+              <div class="modal-body">
+                <form id="firebase-email-form">
+                  <div class="form-group">
+                    <label for="firebase-email" class="form-label">Email Address</label>
+                    <input type="email" id="firebase-email" class="form-input" placeholder="Enter your email" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="firebase-password" class="form-label">Password</label>
+                    <input type="password" id="firebase-password" class="form-input" placeholder="Enter your password" required>
+                  </div>
+                  <button type="submit" class="login-submit-btn">Sign In</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Status Messages -->
+          <div id="auth-status" class="auth-status" style="display: none;"></div>
         <% end %>
 
         <div class="login-footer">
@@ -82,3 +104,205 @@
     </div>
   </div>
 </div>
+
+<!-- Firebase Authentication JavaScript -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+<script>
+  // Firebase Configuration - Replace with your config
+  const firebaseConfig = {
+    apiKey: "your-api-key-here",
+    authDomain: "your-project-id.firebaseapp.com",
+    projectId: "your-project-id",
+    storageBucket: "your-project-id.appspot.com",
+    messagingSenderId: "your-sender-id",
+    appId: "your-app-id-here"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  // Show status message
+  function showStatus(message, type = 'info') {
+    const statusDiv = document.getElementById('auth-status');
+    statusDiv.className = `auth-status auth-status-${type}`;
+    statusDiv.textContent = message;
+    statusDiv.style.display = 'block';
+    
+    setTimeout(() => {
+      statusDiv.style.display = 'none';
+    }, 5000);
+  }
+
+  // Google Sign In
+  function signInWithGoogle() {
+    showStatus('Signing in with Google...', 'info');
+    
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider)
+      .then(result => {
+        return result.user.getIdToken();
+      })
+      .then(idToken => {
+        return fetch('/firebase/auth', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+          },
+          body: JSON.stringify({ id_token: idToken })
+        });
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.firebase_configured) {
+          showStatus('Logged in successfully! Redirecting...', 'success');
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 1500);
+        } else {
+          showStatus('Firebase not configured. Please contact administrator.', 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Google sign-in error:', error);
+        showStatus(error.message || 'Google sign-in failed', 'error');
+      });
+  }
+
+  // Email Sign In Modal
+  function signInWithEmail() {
+    document.getElementById('email-signin-modal').style.display = 'flex';
+  }
+
+  function closeEmailModal() {
+    document.getElementById('email-signin-modal').style.display = 'none';
+  }
+
+  // Email Sign In Form
+  document.getElementById('firebase-email-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('firebase-email').value;
+    const password = document.getElementById('firebase-password').value;
+
+    showStatus('Signing in with email...', 'info');
+
+    auth.signInWithEmailAndPassword(email, password)
+      .then(result => {
+        return result.user.getIdToken();
+      })
+      .then(idToken => {
+        return fetch('/firebase/auth', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+          },
+          body: JSON.stringify({ id_token: idToken })
+        });
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.firebase_configured) {
+          showStatus('Logged in successfully! Redirecting...', 'success');
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 1500);
+        } else {
+          showStatus('Firebase not configured. Please contact administrator.', 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Email sign-in error:', error);
+        showStatus(error.message || 'Email sign-in failed', 'error');
+      });
+  });
+
+  // Close modal when clicking outside
+  window.onclick = function(event) {
+    const modal = document.getElementById('email-signin-modal');
+    if (event.target == modal) {
+      closeEmailModal();
+    }
+  }
+</script>
+
+<style>
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-header h3 {
+    margin: 0;
+    color: #333;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+  }
+
+  .auth-status {
+    padding: 0.75rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  .auth-status-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  .auth-status-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+
+  .auth-status-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+  }
+
+  .email-btn {
+    background-color: #dc3545 !important;
+    color: white !important;
+  }
+
+  .email-btn:hover {
+    background-color: #c82333 !important;
+  }
+</style>
