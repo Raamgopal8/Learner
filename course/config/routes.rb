@@ -28,6 +28,11 @@ Rails.application.routes.draw do
   get "signup", to: "home#signup"
 
   # Resources
-  resources :courses
+  resources :courses do
+    member do
+      post 'enroll'
+      delete 'unenroll'
+    end
+  end
   resources :tests
 end

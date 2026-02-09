@@ -1,7 +1,6 @@
 class TestsController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:index, :show]
-  before_action :authenticate_user!, except: [:index, :show]
-  
+  before_action :require_login, only: [:show]
+
   def index
     @tests = Test.all.order(created_at: :desc)
   end
@@ -23,11 +22,5 @@ class TestsController < ApplicationController
     @questions = @test.questions.order(:id)
     
     Rails.logger.info "Found #{@questions.length} questions for test #{test_id}"
-    
-    # For authenticated users, track test access
-    if user_signed_in?
-      # Log test access for analytics
-      Rails.logger.info "User #{current_user.id} accessed test #{test_id}"
-    end
   end
 end

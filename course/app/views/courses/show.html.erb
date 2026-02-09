@@ -57,7 +57,7 @@
             </ul>
           <% else %>
             <p style="line-height: 1.7; color: #2c3e50; margin-bottom: 20px;">
-              This comprehensive course will equip you with essential skills and knowledge in <%= @course.category.downcase %>.
+              This comprehensive course will equip you with essential skills and knowledge in <%= @course.category %>.
               Through hands-on projects and practical exercises, you'll master key concepts and techniques.
             </p>
           <% end %>
@@ -171,11 +171,18 @@
  <div style="margin-top: 40px; text-align: center;">
   <% if current_user %>
     <% if @enrolled %>
-      <p style="color: #27ae60; font-size: 1.2rem; margin-bottom: 20px;">You are enrolled in this course.</p>
+      <div style="display: flex; gap: 15px; justify-content: center; align-items: center;">
+        <p style="color: #27ae60; font-size: 1.2rem; margin: 0;">You are enrolled in this course.</p>
+        <%= button_to 'Unenroll', unenroll_course_path(@course), method: :delete,
+              data: { confirm: 'Are you sure you want to unenroll?' },
+              style: "display: inline-block; padding: 8px 20px; background: #e74c3c; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; border: none; cursor: pointer; transition: background 0.3s ease; font-size: 0.9rem;" %>
+      </div>
     <% else %>
       <%= button_to 'Enroll Now', enroll_course_path(@course), method: :post,
             style: "display: inline-block; padding: 12px 30px; background: #e74c3c; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: background 0.3s ease;" %>
     <% end %>
+  <% else %>
+    <p style="color: #7f8c8d; margin-bottom: 20px;">Please <a href="/login" style="color: #3498db; text-decoration: none;">log in</a> to enroll in this course.</p>
   <% end %>
  </div>
 

@@ -1,0 +1,312 @@
+<div class="login-container">
+  
+  <!-- Decorative background elements -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="login-card">
+    <div class="text-center">
+      <div class="login-icon-container">
+        <svg class="login-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+      </div>
+      <h2 class="login-title">
+        Welcome Back
+      </h2>
+      <p class="login-subtitle">
+        Enter your credentials to access the tests
+      </p>
+    </div>
+
+    <% if flash[:alert] %>
+      <div class="alert-box" role="alert">
+        <div style="display: flex;">
+          <div style="flex-shrink: 0;">
+            <svg style="width: 20px; height: 20px; color: #ef4444;" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div style="margin-left: 0.75rem;">
+             <p style="font-size: 0.875rem; font-weight: 500;"><%= flash[:alert] %></p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <%= form_with url: login_path, local: true, class: "login-form" do |f| %>
+      <div style="box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); border-radius: 0.375rem;">
+        <div>
+          <%= f.label :name, "Full Name", class: "sr-only" %>
+          <div class="input-group">
+             <div class="input-icon-wrapper">
+              <svg class="input-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+             </div>
+            <%= f.text_field :name, class: "login-input", placeholder: "Full Name", required: true %>
+          </div>
+        </div>
+
+        <div>
+          <%= f.label :email, "Email address", class: "sr-only" %>
+          <div class="input-group">
+             <div class="input-icon-wrapper">
+              <svg class="input-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+              </svg>
+             </div>
+            <%= f.email_field :email, class: "login-input", placeholder: "Email address", required: true %>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center;">
+          <input id="remember-me" name="remember-me" type="checkbox" class="checkbox-input">
+          <label for="remember-me" class="checkbox-label">
+            Remember me
+          </label>
+        </div>
+
+        <div style="font-size: 0.875rem;">
+          <a href="#" class="forgot-link">
+            Forgot your password?
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <%= f.submit "Sign in", class: "submit-btn" %>
+      </div>
+    <% end %>
+    
+    <div style="margin-top: 1.5rem;">
+        <div style="position: relative;">
+            <div style="position: absolute; inset: 0; display: flex; align-items: center;">
+                <div style="width: 100%; border-top: 1px solid rgba(209, 213, 219, 0.5);"></div>
+            </div>
+            <div style="position: relative; display: flex; justify-content: center; font-size: 0.875rem;">
+                <span style="padding: 0 0.5rem; color: #6b7280; background-color: rgba(255, 255, 255, 0.3); backdrop-filter: blur(12px); border-radius: 0.25rem;">
+                    Or continue with
+                </span>
+            </div>
+        </div>
+
+        <div class="social-buttons-grid">
+            <div>
+                <a href="#" class="social-btn">
+                    <span class="sr-only">Sign in with Google</span>
+                     <svg style="width: 20px; height: 20px;" fill="currentColor" viewBox="0 0 24 24"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .533 5.333.533 12S5.867 24 12.48 24c3.44 0 6.013-1.133 8.053-3.24 2.107-2.187 2.76-5.507 2.76-8.12 0-.6-.053-1.213-.16-1.72H12.48z"/></svg>
+                </a>
+            </div>
+            <div>
+                <a href="#" class="social-btn">
+                    <span class="sr-only">Sign in with GitHub</span>
+                    <svg style="width: 20px; height: 20px;" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+  </div>
+  
+  <style>
+      .login-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 1rem; /* py-12 px-4 */
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .login-card {
+        max-width: 28rem; /* max-w-md */
+        width: 100%;
+        position: relative;
+        z-index: 10;
+        background-color: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border-radius: 1rem;
+        padding: 2.5rem; /* p-10 */
+      }
+
+      .text-center { text-align: center; }
+
+      .login-icon-container {
+        margin-left: auto; margin-right: auto;
+        width: 48px; height: 48px;
+        background-color: #4f46e5; /* indigo-600 */
+        border-radius: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        transform: rotate(3deg);
+        transition: transform 0.3s;
+      }
+      .login-icon-container:hover { transform: rotate(6deg); }
+
+      .login-icon { width: 32px; height: 32px; color: white; }
+
+      .login-title {
+        margin-top: 1.5rem;
+        font-size: 1.875rem; /* text-3xl */
+        font-weight: 800;
+        color: #111827;
+        letter-spacing: -0.025em;
+      }
+
+      .login-subtitle {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: #4b5563; /* gray-600 */
+      }
+
+      .alert-box {
+        background-color: rgba(254, 242, 242, 0.8);
+        border-left: 4px solid #ef4444;
+        color: #b91c1c;
+        padding: 1rem;
+        border-radius: 0.25rem;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        backdrop-filter: blur(4px);
+        margin-top: 1rem;
+      }
+
+      .login-form { margin-top: 2rem; display: flex; flex-direction: column; gap: 1.5rem; }
+
+      .input-group { position: relative; }
+
+      .input-icon-wrapper {
+        position: absolute;
+        top: 0; bottom: 0; left: 0;
+        padding-left: 0.75rem;
+        display: flex;
+        align-items: center;
+        pointer-events: none;
+      }
+
+      .input-icon { width: 20px; height: 20px; color: #9ca3af; }
+
+      .login-input {
+        appearance: none;
+        display: block;
+        width: 100%;
+        padding-left: 2.5rem; /* pl-10 */
+        padding-right: 0.75rem;
+        padding-top: 0.75rem; padding-bottom: 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        background-color: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(4px);
+        color: #111827;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+      }
+      .login-input:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 2px #6366f1; /* ring-indigo-500 */
+      }
+
+      .checkbox-input {
+        height: 1rem; width: 1rem;
+        color: #4f46e5;
+        border-radius: 0.25rem;
+        border: 1px solid #d1d5db;
+        cursor: pointer;
+      }
+
+      .checkbox-label {
+        margin-left: 0.5rem;
+        display: block;
+        font-size: 0.875rem;
+        color: #111827;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .forgot-link {
+        font-weight: 500;
+        color: #4f46e5;
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .forgot-link:hover { color: #4338ca; }
+
+      .submit-btn {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 0.75rem 1rem;
+        border: 1px solid transparent;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border-radius: 0.5rem;
+        color: white;
+        background: linear-gradient(to right, #4f46e5, #9333ea); /* indigo to purple */
+        cursor: pointer;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s;
+      }
+      .submit-btn:hover {
+        background: linear-gradient(to right, #4338ca, #7e22ce);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .social-buttons-grid {
+        margin-top: 1.5rem;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+      }
+
+      .social-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 2rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        background-color: rgba(255, 255, 255, 0.7);
+        color: #374151;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: background-color 0.2s;
+        backdrop-filter: blur(4px);
+      }
+      .social-btn:hover { background-color: rgba(255, 255, 255, 0.9); }
+
+      /* Animation keyframes */
+      @keyframes blob {
+          0% { transform: translate(0px, 0px) scale(1); }
+          33% { transform: translate(30px, -50px) scale(1.1); }
+          66% { transform: translate(-20px, 20px) scale(0.9); }
+          100% { transform: translate(0px, 0px) scale(1); }
+      }
+      .blob {
+        position: absolute;
+        border-radius: 9999px;
+        mix-blend-mode: multiply;
+        filter: blur(40px);
+        opacity: 0.7;
+        width: 18rem; height: 18rem;
+        animation: blob 7s infinite;
+        z-index: 0;
+      }
+      .blob-1 { top: 2.5rem; left: 2.5rem; background-color: #d8b4fe; /* purple-300 */ }
+      .blob-2 { top: 0; right: 2.5rem; background-color: #fde047; /* yellow-300 */ animation-delay: 2s; }
+      .blob-3 { bottom: -2rem; left: 5rem; background-color: #f9a8d4; /* pink-300 */ animation-delay: 4s; }
+  </style>
+</div>

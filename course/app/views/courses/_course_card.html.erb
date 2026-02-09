@@ -38,13 +38,17 @@
     <div class="course-footer">
       <div class="course-rating">
         <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star-half-alt"></i>
+          <% (1..5).each do |i| %>
+            <% if course.rating >= i %>
+              <i class="fas fa-star text-yellow-400"></i>
+            <% elsif course.rating >= i - 0.5 %>
+              <i class="fas fa-star-half-alt text-yellow-400"></i>
+            <% else %>
+              <i class="far fa-star text-gray-300"></i>
+            <% end %>
+          <% end %>
         </div>
-        <span class="rating-text">4.5 (120 reviews)</span>
+        <span class="rating-text"><%= course.rating %> (<%= course.reviews_count %> reviews)</span>
       </div>
       <div class="course-price">
         <%= course.formatted_price %>

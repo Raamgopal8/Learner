@@ -3,14 +3,13 @@ require 'uri'
 require 'json'
 
 class AttemptsController < ApplicationController
-  before_action :authenticate_user! # Protect this controller
-
   def create
-    user_id = current_user.id # Securely get user ID
+    # Use the logged-in user
+    user_id = current_user.id
     test_id = params[:test_id].to_i
     answers = params[:answers] || {}
 
-    # Fetch questions for the test
+    # Fetch questions for test
     questions = DB.exec_params("SELECT id, correct_answer FROM questions WHERE test_id=$1", [test_id]).to_a
 
     # Calculate score and total
@@ -22,7 +21,7 @@ class AttemptsController < ApplicationController
     end
 
     # Save attempt
-    DB.exec_params("INSERT INTO attempts (user_id, test_id, score, total_points, submitted_at) VALUES ($1, $2, $3, $4, NOW())", [user_id, test_id, score, total])
+    DB.exec_params("INSERT INTO attempts (user_id, test_id, score, total_points, submitted_at, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW(), NOW())", [user_id, test_id, score, total])
 
     # Build context vector (must match microservice dimension)
     # Example features - compute from DB or compute ad-hoc here
@@ -40,17 +39,22 @@ class AttemptsController < ApplicationController
     target_domain = test_info ? test_info['category'] : nil
 
     # call bandit service for recommendations
-    uri = URI("http://localhost:8000/recommend")
-    http = Net::HTTP.new(uri.host, uri.port)
-    req = Net::HTTP::Post.new(uri.path, {'Content-Type' => 'application/json'})
-    req.body = { 
-      user_id: user_id, 
-      context: context, 
-      top_k: 3,
-      target_domain: target_domain
-    }.to_json
-    resp = http.request(req)
-    recommendations = JSON.parse(resp.body)['recommendations'] rescue []
+    begin
+      uri = URI("http://localhost:8000/recommend")
+      http = Net::HTTP.new(uri.host, uri.port)
+      req = Net::HTTP::Post.new(uri.path, {'Content-Type' => 'application/json'})
+      req.body = { 
+        user_id: user_id, 
+        context: context, 
+        top_k: 3,
+        target_domain: target_domain
+      }.to_json
+      resp = http.request(req)
+      recommendations = JSON.parse(resp.body)['recommendations']
+    rescue StandardError => e
+      Rails.logger.error "Failed to fetch recommendations: #{e.message}"
+      recommendations = []
+    end
     
     # Fetch course details for recommendations
     @recommended_courses = []

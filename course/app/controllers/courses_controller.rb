@@ -1,4 +1,5 @@
 class CoursesController < ApplicationController
+  before_action :authenticate_user!, only: [:enroll]
   def index
     # Base query with all filters
     @courses = Course.all
@@ -6,7 +7,9 @@ class CoursesController < ApplicationController
     # Apply filters if provided
     @courses = @courses.by_category(params[:category]) if params[:category].present?
     @courses = @courses.by_level(params[:level]) if params[:level].present?
-    @enrolled = current_user.enrollments.where(course: @course).exists? if current_user
+    @courses = @courses.by_level(params[:level]) if params[:level].present?
+    
+    # Apply sorting
     
     # Apply sorting
     case params[:sort]
@@ -40,9 +43,45 @@ class CoursesController < ApplicationController
 
   def show
     @course = Course.find(params[:id])
+    @enrolled = current_user&.enrollments&.where(course: @course)&.exists?
     @related_courses = Course.where(category: @course.category)
                            .where.not(id: @course.id)
                            .limit(4)
+  end
+
+  def enroll
+    @course = Course.find(params[:id])
+    
+    if current_user
+      if current_user.enrollments.where(course: @course).exists?
+        redirect_to @course, notice: 'You are already enrolled in this course.'
+      else
+        @enrollment = current_user.enrollments.build(course: @course, enrollment_data: Time.current)
+        if @enrollment.save
+          # Send enrollment email
+          CourseMailer.enrollment_email(current_user, @course).deliver_later
+          redirect_to @course, notice: 'You have successfully enrolled in the course!'
+        else
+          redirect_to @course, alert: 'Unable to enroll. Please try again.'
+        end
+      end
+    else
+      redirect_to login_path, alert: 'You must be logged in to enroll.'
+    end
+  end
+
+  def unenroll
+    @course = Course.find(params[:id])
+    if current_user
+      @enrollment = current_user.enrollments.find_by(course: @course)
+      if @enrollment&.destroy
+        redirect_to @course, notice: 'You have successfully unenrolled from the course.'
+      else
+        redirect_to @course, alert: 'Unable to unenroll. Please try again.'
+      end
+    else
+      redirect_to login_path, alert: 'You must be logged in to unenroll.'
+    end
   end
 
   def new

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Welcome to <%= @course.title %>!</h1>
+    <p>
+      Hello <%= @user.first_name || @user.username || 'Student' %>,
+    </p>
+    <p>
+      You have successfully enrolled in <strong><%= @course.title %></strong>.
+    </p>
+    <p>
+      To access your course content, please visit the course page:
+    </p>
+    <p>
+      <%= link_to 'Go to Course', course_url(@course) %>
+    </p>
+    <p>
+      Happy Learning!
+    </p>
+    <p>Thanks for joining and have a great day!</p>
+  </body>
+</html>

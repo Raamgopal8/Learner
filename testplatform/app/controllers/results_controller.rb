@@ -1,9 +1,7 @@
 class ResultsController < ApplicationController
-  before_action :authenticate_user!
-  
   def index
-    # Security: Only show results for the current user
-    user_id = current_user.id
+    # For now, use a default user ID since authentication is removed
+    user_id = 1 # Default user ID
     
     # Get user's recent attempts
     attempts = DB.exec_params(

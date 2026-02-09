@@ -5,41 +5,29 @@ class ApplicationController < ActionController::Base
   # Enable CSRF protection with proper exception handling
   protect_from_forgery with: :exception
   
-  # Skip CSRF only for API endpoints that use token authentication
+  # Skip CSRF only for API endpoints
   skip_before_action :verify_authenticity_token, if: :api_request?
 
-  # Use Devise authentication only
-  before_action :authenticate_user!
+  helper_method :api_request?, :current_user, :logged_in?
 
   private
+
+  def current_user
+    @current_user ||= User.find(session[:user_id]) if session[:user_id]
+  end
+
+  def logged_in?
+    !!current_user
+  end
+
+  def require_login
+    unless logged_in?
+      session[:return_to] = request.fullpath
+      redirect_to login_path, alert: "You must be logged in to access this section"
+    end
+  end
 
   def api_request?
     request.format.json? || request.path.start_with?('/api/')
   end
-
-  def current_user
-    @current_user ||= begin
-      # Use Devise session authentication
-      super
-    end
-  rescue StandardError => e
-    Rails.logger.error "Authentication error: #{e.message}"
-    nil
-  end
-
-  def authenticate_user!
-    unless current_user
-      if api_request?
-        render json: { error: 'Unauthorized - Valid authentication required' }, status: :unauthorized
-      else
-        redirect_to login_path, alert: 'You need to sign in or sign up before continuing.'
-      end
-    end
-  end
-
-  def user_signed_in?
-    super
-  end
-
-  helper_method :current_user, :user_signed_in?
 end
