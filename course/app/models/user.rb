@@ -23,4 +23,17 @@ class User < ApplicationRecord
   def firebase_user?
     firebase_uid.present?
   end
+
+  def update_streak!
+    today = Date.current
+    return if last_streak_date == today
+
+    if last_streak_date == today.yesterday
+      increment!(:streak_count)
+    else
+      update!(streak_count: 1)
+    end
+    
+    update!(last_streak_date: today)
+  end
 end

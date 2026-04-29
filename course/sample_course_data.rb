@@ -314,7 +314,8 @@ if course
   course.update(
     content: detailed_content.strip,
     learning_outcomes: detailed_outcomes,
-    syllabus: detailed_syllabus
+    syllabus: detailed_syllabus,
+    video_url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" # Example video
   )
   puts "✅ Updated course: #{course.title}"
   puts "📝 Content: #{course.content.length} characters"

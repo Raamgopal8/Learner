@@ -1,0 +1,23 @@
+# Cloud Run Job for database migrations
+# Save this as migrate_job.yaml
+
+apiVersion: run.googleapis.com/v1
+kind: Job
+metadata:
+  name: rails-migrate
+spec:
+  template:
+    spec:
+      template:
+        spec:
+          containers:
+          - image: gcr.io/PROJECT-ID/rails-app
+            env:
+            - name: RAILS_ENV
+              value: "production"
+            - name: DATABASE_URL
+              value: "postgresql://railsuser:your_secure_password@DB_HOST:5432/rails_production"
+            - name: SECRET_KEY_BASE
+              value: "dummy-key-for-migration"
+            command: ["bin/rails", "db:migrate"]
+          restartPolicy: Never

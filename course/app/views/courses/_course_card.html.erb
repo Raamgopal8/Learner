@@ -19,6 +19,31 @@
     <% end %>
   </div>
 
+  <div class="course-video">
+    <% if course.video_url.present? %>
+      <div class="video-wrapper">
+        <% if local_assigns[:is_first] || current_user %>
+          <%= embed_video(course.video_url) %>
+        <% else %>
+          <div class="video-gate bg-gray-900 relative pb-[56.25%] h-0 rounded-lg overflow-hidden group cursor-pointer" onclick="window.location='<%= login_path %>'">
+            <% if course.image_url.present? %>
+               <img src="<%= course.image_url %>" class="absolute top-0 left-0 w-full h-full object-cover opacity-50 filter blur-[2px] transition group-hover:opacity-40">
+            <% else %>
+               <div class="absolute top-0 left-0 w-full h-full bg-gray-800 opacity-50"></div>
+            <% end %>
+            
+            <div class="absolute inset-0 flex flex-col items-center justify-center z-10">
+              <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm mb-3 group-hover:scale-110 transition">
+                <i class="fas fa-lock text-white text-2xl"></i>
+              </div>
+              <span class="text-white font-bold text-lg shadow-black drop-shadow-md">Login to Watch</span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
   <div class="course-content">
     <div class="course-category"><%= course.category %></div>
     <h3 class="course-title"><%= link_to course.title, course %></h3>

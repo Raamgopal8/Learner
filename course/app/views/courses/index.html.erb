@@ -25,6 +25,10 @@
   </div>
 
   <div class="container mx-auto px-4 py-8">
+    <% 
+      show_featured = @featured_courses.any? && !params[:category].present? && !params[:level].present? && !params[:search].present?
+      first_visible_course = show_featured ? @featured_courses.first : @courses.first
+    %>
     <div class="courses-container">
       <!-- Filters Sidebar -->
       <div class="filters-sidebar">
@@ -154,7 +158,7 @@
             <h3 class="section-subtitle">Featured Courses</h3>
             <div class="featured-grid">
               <% @featured_courses.each do |course| %>
-                <%= render partial: 'course_card', locals: { course: course } %>
+                <%= render partial: 'course_card', locals: { course: course, is_first: (course == first_visible_course) } %>
               <% end %>
             </div>
           </div>
@@ -164,7 +168,7 @@
         <% if @courses.any? %>
           <div class="courses-grid">
             <% @courses.each do |course| %>
-              <%= render partial: 'course_card', locals: { course: course } %>
+              <%= render partial: 'course_card', locals: { course: course, is_first: (course == first_visible_course) } %>
             <% end %>
           </div>
 

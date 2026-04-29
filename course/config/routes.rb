@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
+  get 'dashboard', to: 'dashboard#index', as: :dashboard
   get "staticpages/terms"
   get "staticpages/privacy"
   
   devise_for :users, controllers: {
-    registrations: 'users/registrations',
-    sessions: 'devise/sessions'
+    registrations: 'users/registrations'
     # Removed omniauth_callbacks for now
   }
 

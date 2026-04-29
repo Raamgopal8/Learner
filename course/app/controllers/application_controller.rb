@@ -9,6 +9,11 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :username, :email, :password, :password_confirmation, :current_password])
   end
 
+  def after_sign_in_path_for(resource)
+    resource.update_streak! if resource.respond_to?(:update_streak!)
+    dashboard_path
+  end
+
   private
 
   # Support both Devise and Firebase authentication

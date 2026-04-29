@@ -1,0 +1,14 @@
+# Database configuration for Cloud Run + Cloud SQL
+# Add this to your config/database.yml as the production configuration
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  database: <%= ENV.fetch("DATABASE_NAME") { "rails_production" } %>
+  username: <%= ENV.fetch("DATABASE_USERNAME") { "railsuser" } %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD") %>
+  host: <%= ENV.fetch("DATABASE_HOST") %>
+  port: 5432
+  sslmode: require
+  timeout: 5000

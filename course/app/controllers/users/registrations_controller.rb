@@ -36,7 +36,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def after_sign_up_path_for(resource)
     flash[:notice] = "Welcome, #{resource.first_name}! Your account has been created successfully."
-    root_path
+    dashboard_path
   end
 
   def after_inactive_sign_up_path_for(resource)

@@ -1,5 +1,6 @@
 class Course < ApplicationRecord
   validates :title, :description, :instructor, :duration, :price, :level, :category, presence: true
+  validates :video_url, format: { with: URI::regexp(%w[http https]), message: "must be a valid URL" }, allow_blank: true
   validates :price, numericality: { greater_than_or_equal_to: 0 }
   has_one_attached :image
   has_many :enrollments

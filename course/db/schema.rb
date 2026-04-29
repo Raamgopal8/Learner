@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_15_070111) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_10_044746) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -60,6 +60,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_15_070111) do
     t.jsonb "syllabus", default: {}
     t.text "content"
     t.text "learning_outcomes", default: [], array: true
+    t.string "video_url"
     t.index ["category"], name: "index_courses_on_category"
     t.index ["created_at"], name: "index_courses_on_created_at"
     t.index ["featured"], name: "index_courses_on_featured"
@@ -93,6 +94,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_15_070111) do
     t.string "username"
     t.string "firebase_uid"
     t.string "provider"
+    t.integer "streak_count"
+    t.date "last_streak_date"
     t.index ["created_at"], name: "index_users_on_created_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["firebase_uid", "provider"], name: "index_users_on_firebase_uid_and_provider", unique: true

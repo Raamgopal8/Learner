@@ -1,0 +1,32 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-800">Welcome, <%= @user.first_name %>! 👋</h1>
+        <p class="text-gray-600 mt-2">Ready to continue your learning journey?</p>
+      </div>
+      <div class="bg-orange-100 border-2 border-orange-200 rounded-xl p-4 flex items-center">
+        <div class="text-4xl mr-3">🔥</div>
+        <div>
+          <div class="text-2xl font-bold text-orange-600"><%= @user.streak_count %> Day Streak</div>
+          <div class="text-sm text-orange-800">Keep it up!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Your Enrolled Courses</h2>
+  
+  <% if @enrolled_courses.any? %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% @enrolled_courses.each do |course| %>
+        <%= render 'courses/course_card', course: course, course_counter: 0 %> <!-- Use 0 so video shows for enrolled courses if you want, or handle differently. For now, reusing partial -->
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-12 bg-gray-50 rounded-lg">
+      <h3 class="text-xl text-gray-600 mb-4">You haven't enrolled in any courses yet.</h3>
+      <%= link_to "Browse Courses", courses_path, class: "bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition" %>
+    </div>
+  <% end %>
+</div>
